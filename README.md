@@ -27,8 +27,15 @@
 node cli.js --cd=some/other/place frob --verbose=true -gh 'foo'
 └──┘ └────┘ └───────────────────┘ └──┘ └────────────┘ └─┘ └───┘
 ①      ②        ③                  ④      ⑤            ⑥   ⑦
-
 ```
+* ①—xxx
+* ②—xxx
+* ③—xxx
+* ④—xxx
+* ⑤—xxx
+* ⑥—xxx
+* ⑦—xxx
+
 
 # Command Line Parsing: Example
 
