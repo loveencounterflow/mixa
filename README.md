@@ -6,6 +6,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [Command Line Structure](#command-line-structure)
 - [Command Line Parsing: Example](#command-line-parsing-example)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -20,7 +21,20 @@
 * External commands call a child process that is passed the remaing command line arguments, so those can be
   dealt with summarily.
 
+# Command Line Structure
+
+```
+node cli.js --cd=some/other/place   frob --verbose=true -gh 'foo'
+①
+
+```
+
 # Command Line Parsing: Example
+
+* `parse defs, process.argv` will return object with
+  * **`cmd`**—
+  * **`argv`**—
+  * **`error`**—
 
 *upcoming*
 
