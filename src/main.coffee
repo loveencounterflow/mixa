@@ -40,31 +40,14 @@ pluck = ( d, name, fallback = misfit ) ->
     throw new Error "^cli@5477^ no such attribute: #{rpr name}"
   return R
 
-
-#===========================================================================================================
-#
 #-----------------------------------------------------------------------------------------------------------
-@_compile_settings = ( settings ) ->
-  meta      = []
-  internals = []
-  externals = []
-  R         = { meta, internals, externals, }
-  usr       = { meta: ( settings?.meta ? null ), commands: ( settings?.commands ? null ), }
-  #.........................................................................................................
-  for name, description of Object.assign {}, defaults.meta, usr.meta
-    throw Error "^cli@5587^ must not have attribute name, got #{rpr description}" if description.name?
-    meta.push lets description, ( d ) -> d.name = name
-  #.........................................................................................................
-  for name, description of Object.assign {}, defaults.commands, usr.commands
-    throw Error "^cli@5588^ must not have attribute name, got #{rpr description}" if description.name?
-    is_external = false
-    e = lets description, ( d ) ->
-      d.name      = name
-      is_external = pluck d, 'external', false
-    if is_external then externals.push e
-    else                internals.push e
-  #.........................................................................................................
-  return freeze R
+as_list_of_flags = ( flags ) ->
+  R = []
+  return R unless flags?
+  for k, v of flags
+    v.name = k
+    R.push v
+  return R
 
 #-----------------------------------------------------------------------------------------------------------
 defaults = freeze {
@@ -72,25 +55,70 @@ defaults = freeze {
     help:   { alias: 'h', type: Boolean, description: "show help and exit", }
     cd:     { alias: 'd', type: String,  description: "change to directory before running command", }
   commands:
-    help:     { description: "show help and exit", }
+    help:
+      description:  "show help and exit"
+      flags:
+        topic:  { type: String, defaultOption: true, }
+
     'cats!':
-      description: "draw a cat"
+      description:  "draw cats!"
       flags:
         color:  { alias: 'c', type: Boolean, description: "whether to use color", }
     version:  { description: "show project version and exit", }
   }
 
+#-----------------------------------------------------------------------------------------------------------
+E =
+  OK:             0
+  MISSING_CMD:    10
+  UNKNOWN_CMD:    11
+  HAS_NAME:       12
+  NEEDS_VALUE:    13
+  UNKNOWN_FLAG:   14
 
 #===========================================================================================================
 #
 #-----------------------------------------------------------------------------------------------------------
-@_signal = ( R, run, exit_code = null, message = null ) ->
-  validate.nonempty_text          run
-  validate_optional.integer       exit_code
-  validate_optional.nonempty_text message
-  R.run       = run
-  R.exit_code = exit_code
-  R.message   = message
+@_compile_settings = ( settings ) ->
+  meta      = []
+  commands  = {}
+  R         = { meta, commands, }
+  usr       = { meta: ( settings?.meta ? null ), commands: ( settings?.commands ? null ), }
+  #.........................................................................................................
+  for name, description of Object.assign {}, defaults.meta, usr.meta
+    if description.name?
+      ### TAINT do not throw error, return sad value ###
+      throw Error "^cli@5587^ must not have attribute 'name', got #{rpr description}"
+    meta.push lets description, ( d ) -> d.name = name
+  #.........................................................................................................
+  for name, description of Object.assign {}, defaults.commands, usr.commands
+    if description.name?
+      ### TAINT do not throw error, return sad value ###
+      throw Error "^cli@5588^ must not have attribute 'name', got #{rpr description}"
+    is_external = false
+    e = lets description, ( d ) ->
+      d.name      = name
+      is_external = pluck d, 'external', false
+      d.flags     = as_list_of_flags d.flags
+    commands[ name ] = e
+  #.........................................................................................................
+  return freeze R
+
+
+#===========================================================================================================
+#
+#-----------------------------------------------------------------------------------------------------------
+@_signal = ( R, cmd, tag = 'OK', message = null ) ->
+  validate.nonempty_text          cmd
+  validate.nonempty_text          tag
+  if tag is 'OK'
+    validate.null message
+  else
+    validate.nonempty_text message
+    code            = E[ tag ] ? '111'
+    R.error         = { code, tag, message, }
+    R[ @types.sad ] = true
+  R.cmd = cmd
   return R
 
 #===========================================================================================================
@@ -103,63 +131,45 @@ defaults = freeze {
 #-----------------------------------------------------------------------------------------------------------
 @_parse = ( me, argv = null ) ->
   #---------------------------------------------------------------------------------------------------------
-  q =
-    help:         false # place under `meta`
-    testing:      argv? # place under `meta`
-    stage:        null
-  R =
-    exit_code:    null
-    message:      null
-    cd:           null
-    cmd:          null
-    parameters:   {}
+  R = {}
   #---------------------------------------------------------------------------------------------------------
   # Stage: Metaflags
   #.........................................................................................................
-  q.stage = 'meta'
   argv    = argv ? process.argv
   d       = me.meta
   s       = { argv, stopAtFirstUnknown: true, }
   p       = parse_argv d, s
   argv    = pluck p, '_unknown', []
-  q.help  = pluck p, 'help',  false
-  if p.hasOwnProperty 'cd'
-    return @_signal R, 'help_and_exit', 12, "^mixa@12^ must give target directory when using --dd, -d" unless p.cd?
-    R.cd = pluck p, 'cd', null
-  return @_signal R, 'help_and_exit', 0 if q.help
-  return @_signal R, 'help_and_exit', 10, "^mixa@10^ extraneous flag #{rpr flag}" if ( flag = argv[ 0 ] )?.startsWith '-'
-  #---------------------------------------------------------------------------------------------------------
-  # Stage: Internal Commands
-  # Internal commands must parse their specific flags and other arguments.
+  help    = pluck p, 'help',  false
   #.........................................................................................................
-  q.stage = 'internal'
+  if p.hasOwnProperty 'cd'
+    unless p.cd?
+      return @_signal R, 'help', 'NEEDS_VALUE', "must give target directory when using --dd, -d"
+    R.cd = pluck p, 'cd', null
+  #.........................................................................................................
+  if help
+    return @_signal R, 'help', 'OK'
+  #.........................................................................................................
+  if ( flag = argv[ 0 ] )?.startsWith '-'
+    return @_signal R, 'help', 'UNKNOWN_FLAG', "unknown flag #{rpr flag}"
+  #---------------------------------------------------------------------------------------------------------
+  # Stage: Commands
+  #.........................................................................................................
   d       = { name: 'cmd', defaultOption: true, }
   p       = parse_argv d, { argv, stopAtFirstUnknown: true, }
-  q.cmd   = pluck p, 'cmd', null
+  cmd     = pluck p, 'cmd', null
+  unless cmd?
+    return @_signal R, 'help', 'MISSING_CMD', "missing command"
   argv    = pluck p, '_unknown', []
-  return @_signal R, 'help_and_exit', 11, "^mixa@11^ missing command" unless q.cmd?
+  # urge '^33344^', me
+  # urge '^33344^', cmd
+  cmddef  = me.commands[ cmd ] ? null
+  unless cmddef?
+    return @_signal R, 'help', 'UNKNOWN_CMD', "unknown command #{rpr cmd}"
+  if cmddef.flags?
+    p                   = parse_argv cmddef.flags, { argv, stopAtFirstUnknown: true, }
+    R.argv              = pluck p, '_unknown', []
+    R.parameters        = p
   #.........................................................................................................
-  switch q.cmd
-    when 'help'
-      d                   = me.internals.help
-      p                   = parse_argv d, { argv, stopAtFirstUnknown: true, }
-      R.parameters.topic  = pluck p, 'topic', null
-      argv                = pluck p, '_unknown', []
-      return show_help_for_topic_and_exit q, argv
-    when 'cat'
-      return show_cat_and_exit()
-  #---------------------------------------------------------------------------------------------------------
-  # Stage: External Commands
-  #.........................................................................................................
-  # External commands call a child process that is passed the remaing command line arguments, so those
-  # can be dealt with summarily.
-  #.........................................................................................................
-  q.stage             = 'external'
-  p                   = parse_argv [], { argv, stopAtFirstUnknown: true, }
-  argv                = pluck p, '_unknown', []
-  R.parameters.argv   = argv[ .. ]
-  ### TAINT derive list from settings ###
-  if q.cmd in [ 'psql', 'node', 'nodexh', ]
-    return q
-  return @_signal R, 'help_and_exit', 13, "^mixa@13^ Unknown command #{CND.reverse rpr q.cmd}"
+  return @_signal R, cmd, 'OK'
 
