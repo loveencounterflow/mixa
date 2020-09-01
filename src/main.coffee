@@ -75,11 +75,12 @@ E =
   HAS_NAME:       12
   NEEDS_VALUE:    13
   UNKNOWN_FLAG:   14
+  EXTRA_FLAGS:    15
 
 #===========================================================================================================
 #
 #-----------------------------------------------------------------------------------------------------------
-@_compile_settings = ( settings ) ->
+@compile_settings = ( settings ) ->
   meta      = []
   commands  = {}
   R         = { meta, commands, }
@@ -95,11 +96,10 @@ E =
     if description.name?
       ### TAINT do not throw error, return sad value ###
       throw Error "^cli@5588^ must not have attribute 'name', got #{rpr description}"
-    is_external = false
     e = lets description, ( d ) ->
-      d.name      = name
-      is_external = pluck d, 'external', false
-      d.flags     = as_list_of_flags d.flags
+      d.name          = name
+      d.flags         = as_list_of_flags d.flags
+      d.allow_extra  ?= false
     commands[ name ] = e
   #.........................................................................................................
   return freeze R
@@ -126,7 +126,7 @@ E =
 #-----------------------------------------------------------------------------------------------------------
 @parse = ( settings, argv = null ) ->
   validate.mixa_settings settings
-  return freeze @_parse ( @_compile_settings settings ), argv
+  return freeze @_parse ( @compile_settings settings ), argv
 
 #-----------------------------------------------------------------------------------------------------------
 @_parse = ( me, argv = null ) ->
@@ -171,5 +171,10 @@ E =
     R.argv              = pluck p, '_unknown', []
     R.parameters        = p
   #.........................................................................................................
+  if ( not cmddef.allow_extra ) and R.argv.length > 0
+    return @_signal R, 'help', 'EXTRA_FLAGS', "command #{rpr cmd} does not allow extra, got #{rpr R.argv}"
   return @_signal R, cmd, 'OK'
+
+
+
 
