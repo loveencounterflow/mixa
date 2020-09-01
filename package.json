@@ -1,0 +1,30 @@
+{
+  "name": "mixa",
+  "version": "0.0.0",
+  "description": "Fast and simple command line argument parsing with subcommands",
+  "main": "lib/main.js",
+  "scripts": {
+    "test": "echo 'see https://github.com/loveencounterflow/hengist/tree/master/dev/mixa'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loveencounterflow/mixa.git"
+  },
+  "keywords": [
+    "cli",
+    "command line argument parsing",
+    "shell"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/loveencounterflow/mixa/issues"
+  },
+  "dependencies": {
+    "cnd": "^9.2.1",
+    "command-line-args": "^5.1.1",
+    "intertype": "^7.3.1",
+    "letsfreezethat": "^2.2.5",
+    "multimix": "^4.1.0"
+  }
+}
