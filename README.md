@@ -24,8 +24,9 @@
 # Command Line Structure
 
 ```
-node cli.js --cd=some/other/place   frob --verbose=true -gh 'foo'
-①
+node cli.js --cd=some/other/place frob --verbose=true -gh 'foo'
+└──┘ └────┘ └───────────────────┘ └──┘ └────────────┘ └─┘ └───┘
+①      ②        ③                  ④      ⑤            ⑥   ⑦
 
 ```
 
