@@ -24,18 +24,21 @@
 # Command Line Structure
 
 ```
-node cli.js --cd=some/other/place frob --verbose=true -gh 'foo'
-└──┘ └────┘ └───────────────────┘ └──┘ └────────────┘ └─┘ └───┘
-①      ②        ③                  ④      ⑤            ⑥   ⑦
+node cli.js --cd=some/other/place funge --verbose=true -gh 'foo'
+│  │ │    │ │                   │ │   │ └────────────┘ └─┘ └───┘
+│  │ │    │ │                   │ │   │   L             S   P
+└──┘ └────┘ └───────────────────┘ └───┘ └──────────────────────┘
+  E    S      M                    I/X    A
 ```
 
-* ①—executable
-* ②—script
-* ③—meta flag
-* ④—command
-* ⑤—long flag `verbose` with value
-* ⑥—short Boolean flags `g`, `h`
-* ⑦—positional flag
+* E—executable
+* S—script
+* **M**—meta flags (flags that pertain to MIXA)
+* **I**/**X**—internal or external command
+* **A**—arguments (flags that pertain to the command)
+* L—long flag `verbose` with value
+* S—short Boolean flags `g`, `h`
+* P—positional flag
 
 
 # Command Line Parsing: Example
