@@ -28,13 +28,14 @@ node cli.js --cd=some/other/place frob --verbose=true -gh 'foo'
 └──┘ └────┘ └───────────────────┘ └──┘ └────────────┘ └─┘ └───┘
 ①      ②        ③                  ④      ⑤            ⑥   ⑦
 ```
-* ①—xxx
-* ②—xxx
-* ③—xxx
-* ④—xxx
-* ⑤—xxx
-* ⑥—xxx
-* ⑦—xxx
+
+* ①—executable
+* ②—script
+* ③—meta flag
+* ④—command
+* ⑤—long flag `verbose` with value
+* ⑥—short Boolean flags `g`, `h`
+* ⑦—positional flag
 
 
 # Command Line Parsing: Example
