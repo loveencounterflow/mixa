@@ -65,6 +65,6 @@ L                         = @
   "x is an object":                         ( x ) -> @isa.object x
   "x.name is not set":                      ( x ) -> not x.name?
   "x.?description is a text":               ( x ) -> @isa_optional.text     x.description
-  "x.?external is a boolean":               ( x ) -> @isa_optional.boolean  x.external
+  "x.?allow_extra is a boolean":            ( x ) -> @isa_optional.boolean  x.allow_extra
 
 
