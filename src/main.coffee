@@ -109,6 +109,7 @@ E =
       d.name          = name
       d.flags         = as_list_of_flags d.flags
       d.allow_extra  ?= false
+      return null
     commands[ name ] = e
   #.........................................................................................................
   return freeze R
