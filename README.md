@@ -56,7 +56,10 @@ node cli.js --cd=some/other/place funge --verbose=true -gh 'foo'
 * `meta`
 * `commands`
   * `flags`
-    * `multiple`: `false`, `'greedy'`, `'lazy'`; defaults to `false`
+    * `multiple`: `false`, `'greedy'`, `'lazy'`; defaults to `false`; if `'greedy'`, multiple values may be
+      set without repeating the flag name; if `'lazy'`, flag name must be repeated for each value. Ensuing
+      named values are honored in either case.
+
 
 <!--
 # To Do
