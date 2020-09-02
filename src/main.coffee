@@ -90,7 +90,14 @@ E =
     if description.name?
       ### TAINT do not throw error, return sad value ###
       throw Error "^cli@5587^ must not have attribute 'name', got #{rpr description}"
-    meta.push lets description, ( d ) -> d.name = name
+    meta.push lets description, ( d ) ->
+      d.name = name
+      if d.multiple?
+        switch d.multiple
+          when false    then null
+          when 'lazy'   then delete d.multiple; d.lazyMultiple = true
+          when 'greedy' then d.multiple = true
+      return null
   #.........................................................................................................
   for name, description of Object.assign {}, defaults.commands, usr.commands
     if description.name?
