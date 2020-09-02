@@ -27,6 +27,7 @@ parse_argv                = require 'command-line-args'
 misfit                    = Symbol 'misfit'
 # relpath                   = PATH.relative process.cwd(), __filename
 { freeze
+  thaw
   lets }                  = require 'letsfreezethat'
 
 #===========================================================================================================
@@ -38,15 +39,6 @@ pluck = ( d, name, fallback = misfit ) ->
   unless R?
     return fallback unless fallback is misfit
     throw new Error "^cli@5477^ no such attribute: #{rpr name}"
-  return R
-
-#-----------------------------------------------------------------------------------------------------------
-as_list_of_flags = ( flags ) ->
-  R = []
-  return R unless flags?
-  for k, v of flags
-    v.name = k
-    R.push v
   return R
 
 #-----------------------------------------------------------------------------------------------------------
@@ -78,6 +70,21 @@ E =
   EXTRA_FLAGS:    15
   OTHER:          16
 
+#-----------------------------------------------------------------------------------------------------------
+as_list_of_flags = ( flags ) ->
+  R = []
+  return R unless flags?
+  for k, v of thaw flags
+    v.name = k
+    if v.multiple?
+      switch v.multiple
+        when false    then null
+        when 'lazy'   then delete v.multiple; v.lazyMultiple = true
+        when 'greedy' then v.multiple = true
+    R.push v
+  return R
+
+
 #===========================================================================================================
 #
 #-----------------------------------------------------------------------------------------------------------
@@ -85,21 +92,10 @@ E =
   validate.mixa_settings settings
   meta      = []
   commands  = {}
-  R         = { meta, commands, }
+  R         = { commands, }
   usr       = { meta: ( settings?.meta ? null ), commands: ( settings?.commands ? null ), }
   #.........................................................................................................
-  for name, description of Object.assign {}, defaults.meta, usr.meta
-    if description.name?
-      ### TAINT do not throw error, return sad value ###
-      throw Error "^cli@5587^ must not have attribute 'name', got #{rpr description}"
-    meta.push lets description, ( d ) ->
-      d.name = name
-      if d.multiple?
-        switch d.multiple
-          when false    then null
-          when 'lazy'   then delete d.multiple; d.lazyMultiple = true
-          when 'greedy' then d.multiple = true
-      return null
+  R.meta = as_list_of_flags Object.assign {}, defaults.meta, usr.meta
   #.........................................................................................................
   for name, description of Object.assign {}, defaults.commands, usr.commands
     if description.name?
