@@ -8,6 +8,7 @@
 
 - [Command Line Structure](#command-line-structure)
 - [Command Line Parsing: Example](#command-line-parsing-example)
+- [Command Definitions](#command-definitions)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -49,6 +50,13 @@ node cli.js --cd=some/other/place funge --verbose=true -gh 'foo'
   * **`error`**—
 
 *upcoming*
+
+# Command Definitions
+
+* `meta`
+* `commands`
+  * `flags`
+    * `multiple`: `false`, `'greedy'`, `'lazy'`; defaults to `false`
 
 <!--
 # To Do
