@@ -145,7 +145,9 @@ E =
   argv    = argv ? process.argv
   d       = me.meta
   s       = { argv, stopAtFirstUnknown: true, }
-  p       = parse_argv d, s
+  ### TAINT use method to do parse_argv w/ error handling, return happy/sad values ###
+  try p = parse_argv d, s catch error
+    return @_signal R, 'help', 'OTHER', error.message
   argv    = pluck p, '_unknown', []
   help    = pluck p, 'help',  false
   #.........................................................................................................
@@ -163,7 +165,9 @@ E =
   # Stage: Commands
   #.........................................................................................................
   d       = { name: 'cmd', defaultOption: true, }
-  p       = parse_argv d, { argv, stopAtFirstUnknown: true, }
+  ### TAINT use method to do parse_argv w/ error handling, return happy/sad values ###
+  try p = parse_argv d, { argv, stopAtFirstUnknown: true, } catch error
+    return @_signal R, 'help', 'OTHER', error.message
   cmd     = pluck p, 'cmd', null
   unless cmd?
     return @_signal R, 'help', 'MISSING_CMD', "missing command"
@@ -174,7 +178,9 @@ E =
   unless cmddef?
     return @_signal R, 'help', 'UNKNOWN_CMD', "unknown command #{rpr cmd}"
   if cmddef.flags?
-    p                   = parse_argv cmddef.flags, { argv, stopAtFirstUnknown: true, }
+    ### TAINT use method to do parse_argv w/ error handling, return happy/sad values ###
+    try p = parse_argv cmddef.flags, { argv, stopAtFirstUnknown: true, } catch error
+      return @_signal R, 'help', 'OTHER', error.message
     R.argv              = pluck p, '_unknown', []
     R.parameters        = p
   #.........................................................................................................
