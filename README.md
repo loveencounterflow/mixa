@@ -59,7 +59,8 @@ node cli.js --cd=some/other/place funge --verbose=true -gh 'foo'
     * `multiple`: `false`, `'greedy'`, `'lazy'`; defaults to `false`; if `'greedy'`, multiple values may be
       set without repeating the flag name; if `'lazy'`, flag name must be repeated for each value. Ensuing
       named values are honored in either case.
-
+    * `fallback` (translated to `defaultValue`): used when flag is missing; note that when flag is mentioned
+      without a value, then value `none` will be assigned
 
 <!--
 # To Do
