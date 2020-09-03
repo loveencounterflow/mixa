@@ -61,14 +61,15 @@ defaults = freeze {
 
 #-----------------------------------------------------------------------------------------------------------
 E =
-  OK:             0
-  MISSING_CMD:    10
-  UNKNOWN_CMD:    11
-  HAS_NAME:       12
-  NEEDS_VALUE:    13
-  UNKNOWN_FLAG:   14
-  EXTRA_FLAGS:    15
-  OTHER:          16
+  OK:               0
+  MISSING_CMD:      10
+  UNKNOWN_CMD:      11
+  HAS_NAME:         12
+  NEEDS_VALUE:      13
+  UNKNOWN_FLAG:     14
+  EXTRA_FLAGS:      15
+  OTHER:            16
+  ILLEGAL_SETTINGS: 17
 
 #-----------------------------------------------------------------------------------------------------------
 as_list_of_flags = ( flags ) ->
@@ -76,11 +77,24 @@ as_list_of_flags = ( flags ) ->
   return R unless flags?
   for k, v of thaw flags
     v.name = k
+    #.......................................................................................................
     if v.multiple?
       switch v.multiple
-        when false    then null
-        when 'lazy'   then delete v.multiple; v.lazyMultiple = true
-        when 'greedy' then v.multiple = true
+        when false
+          null
+        when 'lazy'
+          v.lazyMultiple = true
+          delete v.multiple
+        when 'greedy'
+          v.multiple = true
+    #.......................................................................................................
+    if v.fallback?
+      v.defaultValue = v.fallback
+      delete v.fallback
+    #.......................................................................................................
+    if v.positional?
+      v.defaultOption = v.positional
+      delete v.positional
     R.push v
   return R
 
@@ -89,7 +103,13 @@ as_list_of_flags = ( flags ) ->
 #
 #-----------------------------------------------------------------------------------------------------------
 @compile_settings = ( settings ) ->
-  validate.mixa_settings settings
+  ### TAINT simplify this with next version of InterType:
+  return new Error report if ( report = @types.xxxxxxx.mixa_settings settings )?
+  or similar, as the case may be ###
+  # validate.mixa_settings settings
+  unless isa.mixa_settings settings
+    aspect = @types._get_unsatisfied_aspect 'mixa_settings', settings
+    return @_signal {}, 'help', 'ILLEGAL_SETTINGS', "not a valid mixa_settings object: violates #{rpr aspect}"
   meta      = []
   commands  = {}
   R         = { commands, }
@@ -98,9 +118,6 @@ as_list_of_flags = ( flags ) ->
   R.meta = as_list_of_flags Object.assign {}, defaults.meta, usr.meta
   #.........................................................................................................
   for name, description of Object.assign {}, defaults.commands, usr.commands
-    if description.name?
-      ### TAINT do not throw error, return sad value ###
-      throw Error "^cli@5588^ must not have attribute 'name', got #{rpr description}"
     e = lets description, ( d ) ->
       d.name          = name
       d.flags         = as_list_of_flags d.flags
@@ -130,7 +147,9 @@ as_list_of_flags = ( flags ) ->
 #===========================================================================================================
 #
 #-----------------------------------------------------------------------------------------------------------
-@parse = ( settings, argv = null ) -> freeze @_parse ( @compile_settings settings ), argv
+@parse = ( settings, argv = null ) ->
+  return R if @types.is_sad ( R = @compile_settings settings )
+  return freeze @_parse R, argv
 
 #-----------------------------------------------------------------------------------------------------------
 @_parse = ( me, argv = null ) ->

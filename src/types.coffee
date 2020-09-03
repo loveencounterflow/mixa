@@ -55,9 +55,10 @@ has_only_keys = ( x, keys ) ->
   "x.?alias is a text":                     ( x ) -> @isa_optional.text           x.alias
   "x.?description is a text":               ( x ) -> @isa_optional.text           x.description
   "x.?multiple is a _mixa_multiple":        ( x ) -> @isa_optional._mixa_multiple x.multiple
-  "x.?defaultValue is anything":            ( x ) -> true
-  "x has only keys 'type', 'alias', 'description', 'multiple', 'defaultValue'":     \
-    ( x ) -> has_only_keys x, [ 'type', 'alias', 'description', 'multiple', 'defaultValue', ]
+  "x.?positional is a boolean":             ( x ) -> @isa_optional.boolean        x.positional
+  "x.?fallback is anything":                ( x ) -> true
+  "x has only keys 'type', 'alias', 'description', 'multiple', 'fallback', 'positional'":     \
+    ( x ) -> has_only_keys x, [ 'type', 'alias', 'description', 'multiple', 'fallback', 'positional', ]
 
 #-----------------------------------------------------------------------------------------------------------
 @declare '_mixa_multiple', tests:
