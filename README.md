@@ -9,6 +9,7 @@
 - [Command Line Structure](#command-line-structure)
 - [Command Line Parsing: Example](#command-line-parsing-example)
 - [Command Definitions](#command-definitions)
+- [Passing Options to Other Programs](#passing-options-to-other-programs)
 - [To Do](#to-do)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -65,8 +66,23 @@ node cli.js --cd=some/other/place funge --verbose=true -gh 'foo'
       without a value, then value `none` will be assigned
     * `positional`: `true` or `false` (translated to `defaultOption`), indicates whether unnamed argument
       id allowed; interacts with `allow_extra`; only at most one flag can be marked `positional`
+  * `run`: `function` or `asyncfunction`, will receive result of `MIXA.parse()`
+  <!-- * `raw`: when `true`,  -->
 
+# Passing Options to Other Programs
 
+* Sometimes one wants to pass options to another executable; e.g. say we want to use `node x.js search
+  -iname 'whatever'` to call the Linux `find` command in a subprocess and we wish to not analyze any options
+  but just pass them through to the subprocess
+* Note that the `find` utility uses long options with a single hyphen; problem is that the parser currently
+  used bei MIXA will misinterpret `iname` as `[ '-i', '-n', '-a', '-m', '-e', ]`
+* As a workaround, use `%` either
+  * as a standalone 'pseudo-option' as in `node x.js search % -iname 'whatever'`; this will cause all
+    arguments after the `%` per cent sign to be returned untouched in the result's `argv` list; or
+  * as a prefix for single-hyphen options to inhibit their being parsed, as in `node x.js search %-iname
+    'whatever'` (note the missing space in `%-iname`).
+  * In either case, these per cent signs will be removed.
+* A future version of MIXA might drop this feature alltogether.
 
 # To Do
 
