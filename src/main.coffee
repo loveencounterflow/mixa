@@ -230,7 +230,9 @@ as_list_of_flags = ( flags ) ->
 @run = ( jobdef, argv = null ) ->
   if @types.is_sad ( R = @parse jobdef, argv )
     return @runners.help R
-  return R.runner R
+  if ( runner = R.verdict.runner ? ( ( x ) -> x ) )?
+    R.result = runner R
+  return R
   # return await R.runner R
 
 
