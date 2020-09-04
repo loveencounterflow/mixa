@@ -147,7 +147,7 @@ as_list_of_flags = ( flags ) ->
 
 #-----------------------------------------------------------------------------------------------------------
 @_split_on_inhibitor = ( argv ) ->
-  return { argv,                  post: [],                 } if ( idx = argv.indexOf '%' ) < 0
+  return { argv,                  post: [],                 } if ( idx = argv.indexOf '--' ) < 0
   return { argv: argv[ ... idx ], post: argv[ idx + 1 .. ], }
 
 #===========================================================================================================
@@ -207,8 +207,8 @@ as_list_of_flags = ( flags ) ->
   else
     R.argv              = post
   #.........................................................................................................
-  ### Remove all percent-escaped initial hyphens: ###
-  ( R.argv[ idx ] = d.replace /^%-/, '-' ) for d, idx in R.argv
+  # ### Remove all percent-escaped initial hyphens: ###
+  # ( R.argv[ idx ] = d.replace /^%-/, '-' ) for d, idx in R.argv
   #.........................................................................................................
   if ( not cmddef.allow_extra ) and R.argv.length > 0
     return @_signal R, 'help', 'EXTRA_FLAGS', "command #{rpr cmd} does not allow extra, got #{rpr R.argv}"
