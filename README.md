@@ -76,13 +76,10 @@ node cli.js --cd=some/other/place funge --verbose=true -gh 'foo'
   but just pass them through to the subprocess
 * Note that the `find` utility uses long options with a single hyphen; problem is that the parser currently
   used bei MIXA will misinterpret `iname` as `[ '-i', '-n', '-a', '-m', '-e', ]`
-* As a workaround, use `%` either
-  * as a standalone 'pseudo-option' as in `node x.js search % -iname 'whatever'`; this will cause all
-    arguments after the `%` per cent sign to be returned untouched in the result's `argv` list; or
-  * as a prefix for single-hyphen options to inhibit their being parsed, as in `node x.js search %-iname
-    'whatever'` (note the missing space in `%-iname`).
-  * In either case, these per cent signs will be removed.
-* A future version of MIXA might drop this feature alltogether.
+* As a workaround, use `--` somewhere *after* the command (`search` in this example) but *before* before the
+  first single-dash flag to be left as-is (`-iname` in this case), that is, call your program as `node x.js
+  search -- -iname 'whatever'`.
+* A future version of MIXA might not require using `--`.
 
 # To Do
 
