@@ -27,7 +27,7 @@ has_only_keys = ( x, keys ) ->
   return true
 
 #-----------------------------------------------------------------------------------------------------------
-@declare 'mixa_settings', tests:
+@declare 'mixa_jobdef', tests:
   "x is an object":                         ( x ) -> @isa.object x
   "x.?meta is a mixa_flagdefs":             ( x ) -> @isa_optional.mixa_flagdefs  x.meta
   "x.?commands is a mixa_cmddefs":          ( x ) -> @isa_optional.mixa_cmddefs   x.commands
@@ -62,7 +62,11 @@ has_only_keys = ( x, keys ) ->
 
 #-----------------------------------------------------------------------------------------------------------
 @declare '_mixa_multiple', tests:
-  "x? is either false or 'lazy' or 'greedy": ( x ) -> x in [ null, false, 'greedy', 'lazy', ]
+  "x? is either false or 'lazy' or 'greedy'": ( x ) -> x in [ null, false, 'greedy', 'lazy', ]
+
+#-----------------------------------------------------------------------------------------------------------
+@declare '_mixa_runnable', tests:
+  "x is a sync or async function": ( x ) -> ( @isa.function x ) or ( @isa.asyncfunction x )
 
 #-----------------------------------------------------------------------------------------------------------
 @declare 'mixa_cmddef', tests:
@@ -71,8 +75,12 @@ has_only_keys = ( x, keys ) ->
   "x.?description is a text":               ( x ) -> @isa_optional.text           x.description
   "x.?allow_extra is a boolean":            ( x ) -> @isa_optional.boolean        x.allow_extra
   "x.?flags is a mixa_flagdefs":            ( x ) -> @isa_optional.mixa_flagdefs  x.flags
-  "x has only keys 'description', 'allow_extra', 'flags'":     \
-    ( x ) -> has_only_keys x, [ 'description', 'allow_extra', 'flags', ]
+  "x.?runner is a _mixa_runnable":          ( x ) -> @isa_optional._mixa_runnable x.runner
+  "x.?plus is anything":                    ( x ) -> true
+  "x has only keys 'description', 'allow_extra', 'flags', 'runner', 'plus'":     \
+    ( x ) ->
+      debug '^33387^', ( k for k of x )
+      has_only_keys x, [ 'description', 'allow_extra', 'flags', 'runner', 'plus', ]
 
 
 

@@ -15,6 +15,7 @@ urge                      = CND.get_logger 'urge',      badge
 info                      = CND.get_logger 'info',      badge
 echo                      = CND.echo.bind CND
 #...........................................................................................................
+@runners                  = require './runners'
 @types                    = require './types'
 { isa
   validate
@@ -102,18 +103,18 @@ as_list_of_flags = ( flags ) ->
 #===========================================================================================================
 #
 #-----------------------------------------------------------------------------------------------------------
-@compile_settings = ( settings ) ->
+@_compile_jobdef = ( jobdef ) ->
   ### TAINT simplify this with next version of InterType:
-  return new Error report if ( report = @types.xxxxxxx.mixa_settings settings )?
+  return new Error report if ( report = @types.xxxxxxx.mixa_jobdef jobdef )?
   or similar, as the case may be ###
-  # validate.mixa_settings settings
-  unless isa.mixa_settings settings
-    aspect = @types._get_unsatisfied_aspect 'mixa_settings', settings
-    return @_signal {}, 'help', 'ILLEGAL_SETTINGS', "not a valid mixa_settings object: violates #{rpr aspect}"
+  # validate.mixa_jobdef jobdef
+  unless isa.mixa_jobdef jobdef
+    aspect = @types._get_unsatisfied_aspect 'mixa_jobdef', jobdef
+    return @_signal {}, 'help', 'ILLEGAL_SETTINGS', "not a valid mixa_jobdef object: violates #{rpr aspect}"
   meta      = []
   commands  = {}
   R         = { commands, }
-  usr       = { meta: ( settings?.meta ? null ), commands: ( settings?.commands ? null ), }
+  usr       = { meta: ( jobdef?.meta ? null ), commands: ( jobdef?.commands ? null ), }
   #.........................................................................................................
   R.meta = as_list_of_flags Object.assign {}, defaults.meta, usr.meta
   #.........................................................................................................
@@ -125,7 +126,7 @@ as_list_of_flags = ( flags ) ->
       return null
     commands[ name ] = e
   #.........................................................................................................
-  return freeze R
+  return R
 
 
 #===========================================================================================================
@@ -150,24 +151,30 @@ as_list_of_flags = ( flags ) ->
   return { argv,                  post: [],                 } if ( idx = argv.indexOf '--' ) < 0
   return { argv: argv[ ... idx ], post: argv[ idx + 1 .. ], }
 
+
 #===========================================================================================================
 #
 #-----------------------------------------------------------------------------------------------------------
-@parse = ( settings, argv = null ) ->
-  return R if @types.is_sad ( R = @compile_settings settings )
-  return @_parse R, argv
+@parse = ( jobdef, argv = null ) ->
+  argv    = argv ? process.argv
+  R       = { jobdef, input: argv, }
+  cjobdef = @_compile_jobdef jobdef
+  if @types.is_sad cjobdef
+    R.verdict = cjobdef
+    return R
+  R.verdict = @_parse cjobdef, argv
+  return R
 
 #-----------------------------------------------------------------------------------------------------------
-@_parse = ( me, argv = null ) ->
-  #---------------------------------------------------------------------------------------------------------
-  R = {}
+@_parse = ( me, argv ) ->
   #---------------------------------------------------------------------------------------------------------
   # Stage: Metaflags
   #.........................................................................................................
-  argv      = argv ? process.argv
+  R         = {}
   d         = me.meta
   { argv
     post }  = @_split_on_inhibitor argv
+  # debug '^33736^', { argv, post, }
   ### TAINT use method to do parse_argv w/ error handling, return happy/sad values ###
   try p = parse_argv d, { argv, stopAtFirstUnknown: true, } catch error
     return @_signal R, 'help', 'OTHER', error.message
@@ -212,8 +219,18 @@ as_list_of_flags = ( flags ) ->
   #.........................................................................................................
   if ( not cmddef.allow_extra ) and R.argv.length > 0
     return @_signal R, 'help', 'EXTRA_FLAGS', "command #{rpr cmd} does not allow extra, got #{rpr R.argv}"
+  R.plus    = plus    if ( plus   = cmddef.plus               )?
+  R.runner  = runner  if ( runner = cmddef.runner ? me.runner )?
   return @_signal R, cmd, 'OK'
 
 
+#===========================================================================================================
+#
+#-----------------------------------------------------------------------------------------------------------
+@run = ( jobdef, argv = null ) ->
+  if @types.is_sad ( R = @parse jobdef, argv )
+    return @runners.help R
+  return R.runner R
+  # return await R.runner R
 
 
