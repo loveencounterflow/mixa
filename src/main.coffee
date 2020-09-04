@@ -141,15 +141,21 @@ as_list_of_flags = ( flags ) ->
     code            = E[ tag ] ? '111'
     R.error         = { code, tag, message, }
     R[ @types.sad ] = true
+    # debug '^4443^', R
   R.cmd = cmd
   return R
+
+#-----------------------------------------------------------------------------------------------------------
+@_split_on_inhibitor = ( argv ) ->
+  return { argv,                  post: [],                 } if ( idx = argv.indexOf '%' ) < 0
+  return { argv: argv[ ... idx ], post: argv[ idx + 1 .. ], }
 
 #===========================================================================================================
 #
 #-----------------------------------------------------------------------------------------------------------
 @parse = ( settings, argv = null ) ->
   return R if @types.is_sad ( R = @compile_settings settings )
-  return freeze @_parse R, argv
+  return @_parse R, argv
 
 #-----------------------------------------------------------------------------------------------------------
 @_parse = ( me, argv = null ) ->
@@ -158,11 +164,12 @@ as_list_of_flags = ( flags ) ->
   #---------------------------------------------------------------------------------------------------------
   # Stage: Metaflags
   #.........................................................................................................
-  argv    = argv ? process.argv
-  d       = me.meta
-  s       = { argv, stopAtFirstUnknown: true, }
+  argv      = argv ? process.argv
+  d         = me.meta
+  { argv
+    post }  = @_split_on_inhibitor argv
   ### TAINT use method to do parse_argv w/ error handling, return happy/sad values ###
-  try p = parse_argv d, s catch error
+  try p = parse_argv d, { argv, stopAtFirstUnknown: true, } catch error
     return @_signal R, 'help', 'OTHER', error.message
   argv    = pluck p, '_unknown', []
   help    = pluck p, 'help',  false
@@ -188,8 +195,6 @@ as_list_of_flags = ( flags ) ->
   unless cmd?
     return @_signal R, 'help', 'MISSING_CMD', "missing command"
   argv    = pluck p, '_unknown', []
-  # urge '^33344^', me
-  # urge '^33344^', cmd
   cmddef  = me.commands[ cmd ] ? null
   unless cmddef?
     return @_signal R, 'help', 'UNKNOWN_CMD', "unknown command #{rpr cmd}"
@@ -197,8 +202,13 @@ as_list_of_flags = ( flags ) ->
     ### TAINT use method to do parse_argv w/ error handling, return happy/sad values ###
     try p = parse_argv cmddef.flags, { argv, stopAtFirstUnknown: true, } catch error
       return @_signal R, 'help', 'OTHER', error.message
-    R.argv              = pluck p, '_unknown', []
+    R.argv              = ( pluck p, '_unknown', [] ).concat post
     R.parameters        = p
+  else
+    R.argv              = post
+  #.........................................................................................................
+  ### Remove all percent-escaped initial hyphens: ###
+  ( R.argv[ idx ] = d.replace /^%-/, '-' ) for d, idx in R.argv
   #.........................................................................................................
   if ( not cmddef.allow_extra ) and R.argv.length > 0
     return @_signal R, 'help', 'EXTRA_FLAGS', "command #{rpr cmd} does not allow extra, got #{rpr R.argv}"
