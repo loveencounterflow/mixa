@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "",
+  "sourceRoot": "",
+  "sources": [
+    "../src/run.coffee"
+  ],
+  "names": [],
+  "mappings": "AACA;EAAA;AAAA,MAAA,GAAA,EAAA,EAAA,EAAA,KAAA,EAAA,KAAA,EAAA,KAAA,EAAA,IAAA,EAAA,IAAA,EAAA,IAAA,EAAA,GAAA,EAAA,IAAA,EAAA,IAAA,EAAA,OAAA;;;EAIA,GAAA,GAA4B,OAAA,CAAQ,KAAR;;EAC5B,GAAA,GAA4B,GAAG,CAAC;;EAChC,KAAA,GAA4B;;EAC5B,KAAA,GAA4B,GAAG,CAAC,UAAJ,CAAe,OAAf,EAA4B,KAA5B;;EAC5B,KAAA,GAA4B,GAAG,CAAC,UAAJ,CAAe,OAAf,EAA4B,KAA5B;;EAC5B,OAAA,GAA4B,GAAG,CAAC,UAAJ,CAAe,SAAf,EAA4B,KAA5B;;EAC5B,IAAA,GAA4B,GAAG,CAAC,UAAJ,CAAe,MAAf,EAA4B,KAA5B;;EAC5B,IAAA,GAA4B,GAAG,CAAC,UAAJ,CAAe,MAAf,EAA4B,KAA5B;;EAC5B,IAAA,GAA4B,GAAG,CAAC,UAAJ,CAAe,MAAf,EAA4B,KAA5B;;EAC5B,IAAA,GAA4B,GAAG,CAAC,UAAJ,CAAe,MAAf,EAA4B,KAA5B;;EAC5B,IAAA,GAA4B,GAAG,CAAC,IAAI,CAAC,IAAT,CAAc,GAAd,EAd5B;;;EAgBA,EAAA,GAA4B,OAAA,CAAQ,eAAR,EAhB5B;;;;;EAsBA,IAAC,CAAA,GAAD,GAAO,QAAA,CAAE,QAAF,CAAA,EAAA,EAtBP;;;EAyBA,IAAC,CAAA,GAAG,CAAC,QAAL,GAAgB,QAAA,CAAE,QAAF,CAAA;WACd,KAAA,CAAM,UAAN,EAAkB,QAAlB;EADc;AAzBhB",
+  "sourcesContent": [
+    "\n'use strict'\n\n\n############################################################################################################\nCND                       = require 'cnd'\nrpr                       = CND.rpr\nbadge                     = 'MIXA/RUN'\ndebug                     = CND.get_logger 'debug',     badge\nalert                     = CND.get_logger 'alert',     badge\nwhisper                   = CND.get_logger 'whisper',   badge\nwarn                      = CND.get_logger 'warn',      badge\nhelp                      = CND.get_logger 'help',      badge\nurge                      = CND.get_logger 'urge',      badge\ninfo                      = CND.get_logger 'info',      badge\necho                      = CND.echo.bind CND\n#...........................................................................................................\nCP                        = require 'child_process'\n\n\n#===========================================================================================================\n#\n#-----------------------------------------------------------------------------------------------------------\n@run = ( settings ) ->\n\n#-----------------------------------------------------------------------------------------------------------\n@run.execSync = ( settings ) ->\n  debug '^233387^', settings\n\n"
+  ]
+}
