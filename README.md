@@ -7,6 +7,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Command Line Structure](#command-line-structure)
+- [Configuring Jobs with `jobdefs`](#configuring-jobs-with-jobdefs)
 - [Command Line Parsing: Example](#command-line-parsing-example)
 - [Command Definitions](#command-definitions)
 - [Passing Options to Other Programs](#passing-options-to-other-programs)
@@ -44,27 +45,49 @@ node cli.js --cd=some/other/place funge --verbose=true -gh 'foo'
 * S—short Boolean flags `g`, `h`
 * P—positional flag
 
+# Configuring Jobs with `jobdefs`
+
+* `jobdef`
+  * **`?exit_on_error <boolean> = true`**—When calling `MIXA.run jobdef, input`, determines whether to exit
+    with an exit code in case an error in the jobdef or the input was detected. `exit_on_error` does not
+    affect the behavior of `MIXA.parse jobdef, input`.
+  * **`?meta <mixa_flagdefs>`**—An object that specifies (additional) metaflags to go before the command.
+  * **`?commands <mixa_cmddefs>`**—An object that specifies commands.
+
+* The keys of the `commands` object are the command names; its values are `mixa_cnddef` objects:
+  * **`?description <text>`**—
+  * **`?allow_extra <boolean> = false`**—Whether to allow unspecified arguments on the command line; these
+    will be made available as `verdict.extra`.
+  * **`?flags <mixa_flagdefs>`**—An object detailing each command line argument to the command in question.
+  * **`?runner <_mixa_runnable>`**—A synchronous or asynchronous function to be called by `MIXA.run jobdef,
+    input` provided no error occured during validation of `jobdef` and parsing the `input`
+  * **`?plus <any>`**—Any additional value or values that should be made accessible to the runner as
+    `verdict.plus`.
 
 # Command Line Parsing: Example
 
 * `parse jobdef, process.argv` will return object with
-  * **`jobdef`**—the `jobdef` that describes how to parse command line arguments into a command with
+  * **`jobdef`**—The `jobdef` that describes how to parse command line arguments into a command with
     flags (jobflags and metaflags)
-  * **`input`**—the `argv` used as input, unchanged
-  * **`verdict`**—the result of parsing the input `argv` against the `jobdef`; this is either a 'happy'
+  * **`input`**—The `argv` used as input, unchanged
+  * **`verdict`**—The result of parsing the input `argv` against the `jobdef`; this is either a 'happy'
     result or, if an error was detected, a 'sad' result with indicators what the problem was.
     * A happy verdict will have the following attributes:
       * **`cmd`**—The matching command;
       * **`argv`**—Remaining arguments, if any;
-      * **`parameters`**—object with the named flags and their values;
-      * **`plus`**—the `plus` attribute from the matching jobdef's command definition, if any;
-      * **`runner`**—the `runner` attribute from the matching jobdef's command definition, if any.
+      * **`parameters`**—Object with the named flags and their values;
+      * **`plus`**—The `plus` attribute from the matching jobdef's command definition, if any;
+      * **`runner`**—The `runner` attribute from the matching jobdef's command definition, if any.
     * A sad verdict will have the following attributes:
-      * **`cmd`**—invariably set to `help`, indicating that a helpful message should be displayed;
+      * **`cmd`**—Invariably set to `help`, indicating that a helpful message should be displayed;
       * **`error`**:
         * **`tag`**—A short upper case textual code that identifies the error class
         * **`code`**—An integer error code in the range `[ 1 .. 127 ]`
         * **`message`**—An error message
+  * **`output`**:—What the runner returned
+    * **`ok`**:—The value of the computation, if any, depending on the runner called
+    * **`error`**:—Details in case a runner encountered problems computing an `ok` value; as above, will
+      have fields `tag`, `code`, `message` where present
 
 *upcoming*
 
