@@ -71,6 +71,7 @@ E =
   EXTRA_FLAGS:      15
   OTHER:            16
   ILLEGAL_SETTINGS: 17
+  UNKNOWN:          18
 
 #-----------------------------------------------------------------------------------------------------------
 as_list_of_flags = ( flags ) ->
@@ -228,10 +229,15 @@ as_list_of_flags = ( flags ) ->
 #
 #-----------------------------------------------------------------------------------------------------------
 @run = ( jobdef, argv = null ) ->
-  if @types.is_sad ( R = @parse jobdef, argv )
+  if @types.is_sad ( R = @parse jobdef, argv ).verdict
     return @runners.help R
-  if ( runner = R.verdict.runner ? ( ( x ) -> x ) )?
-    R.result = runner R
+  return R unless ( runner = R.verdict.runner )?
+    ### TAINT ensure this is an object of type `result` (`{ ?ok: any, ?error: any }`) ###
+  R.output = runner R
+  debug '^33334^', R.output
+  if @types.is_sad R.output
+    warn '^3443451^', "output is sad"
+    return @runners.help R
   return R
   # return await R.runner R
 

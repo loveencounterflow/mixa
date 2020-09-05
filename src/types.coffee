@@ -31,7 +31,9 @@ has_only_keys = ( x, keys ) ->
   "x is an object":                         ( x ) -> @isa.object x
   "x.?meta is a mixa_flagdefs":             ( x ) -> @isa_optional.mixa_flagdefs  x.meta
   "x.?commands is a mixa_cmddefs":          ( x ) -> @isa_optional.mixa_cmddefs   x.commands
-  "x has only keys 'meta', 'commands'":     ( x ) -> has_only_keys x, [ 'meta', 'commands', ]
+  "x.?exit_on_error is a boolean":          ( x ) -> @isa_optional.boolean        x.exit_on_error
+  "x has only keys 'meta', 'commands', 'exit_on_error'": ( x ) ->
+    has_only_keys x, [ 'meta', 'commands', 'exit_on_error', ]
 
 #-----------------------------------------------------------------------------------------------------------
 @declare 'mixa_flagdefs', tests:

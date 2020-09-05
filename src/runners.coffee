@@ -19,17 +19,26 @@ CP                        = require 'child_process'
 types                     = require './types'
 { isa
   validate
-  validate_optional
-  cast
-  type_of }               = types.export()
-
+  sad     }               = types.export()
 
 #===========================================================================================================
 #
 #-----------------------------------------------------------------------------------------------------------
 @help = ( parse ) ->
   info '^233387^', "======== display help text here =========="
+  urge '^233387^', exit_on_error = parse.jobdef.exit_on_error ? true
   whisper '^233387^', parse
+  if ( error = parse.verdict.error      ) ? null then stage = 'input'
+  else if ( error = parse.output.error  ) ? null then stage = 'output'
+  if error?
+    ### TAINT use `_signal()` to derive defaults ###
+    code    = error.code ? 18
+    tag     = error.tag  ? 'UNKNOWN'
+    message = error.message ? "an unspecified error occurred"
+    message = "^mixa/runners/help@4457^ tag: #{tag}, code: #{code}, stage: #{rpr stage} | #{message}"
+    warn message
+    process.exit code if exit_on_error
+  return parse
 
 #-----------------------------------------------------------------------------------------------------------
 @execSync = ( parse ) ->
@@ -38,8 +47,10 @@ types                     = require './types'
   executable  = verdict.plus?.executable ? jobdef.executable ? verdict.cmd
   validate.nonempty_text executable
   argv        = verdict.argv        ? []
-  ### TAINT escape command string; would be better to use array but not possible? ###
-  command     = "#{executable} #{argv.join ' '}"
+  ### TAINT make escaping of arguments configurable? ###
+  args        = CND.shellescape argv
+  # args        = argv.join ' '
+  command     = "#{executable} #{args}"
   settings    =
     cwd:          verdict.cd ? process.cwd()
     encoding:     'utf-8'
@@ -50,11 +61,12 @@ types                     = require './types'
     throw new Error "^33667^ don't know parameters #{rpr parameters}"
   info '^233387^', "======== execSync =========="
   whisper '^233387^', parse
-  info '^233387^', { executable, argv, cwd: settings.cwd, parameters, }
-  try R = CP.execSync command, settings catch error
+  ### TAINT make this info part of result ###
+  info '^233387^', { executable, argv, cwd: settings.cwd, parameters, command, }
+  try ok = CP.execSync command, settings catch error
     ### TAINT don't throw error, return sad result ###
-    throw error
-  return R
+    return { error: { code: 16, tag: 'UNKNOWN', message: error.message, }, command, [sad]: true, }
+  return { ok, command, }
 
 
 
