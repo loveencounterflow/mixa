@@ -6,11 +6,12 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Command Line Structure](#command-line-structure)
-- [Job Definitions (`jobdefs`)](#job-definitions-jobdefs)
-- [Command Definitions (`<cmddefs>`, `<cmddef>`)](#command-definitions-cmddefs-cmddef)
-- [Flag Definitions (`<flagdefs>`, `<flagdef>`)](#flag-definitions-flagdefs-flagdef)
-- [Command Line Parsing: Example](#command-line-parsing-example)
+  - [Command Line Structure](#command-line-structure)
+  - [Metaflags](#metaflags)
+  - [Job Definition (`<jobdef>`)](#job-definition-jobdef)
+  - [Command Definitions (`<cmddefs>`, `<cmddef>`)](#command-definitions-cmddefs-cmddef)
+  - [Flag Definitions (`<flagdefs>`, `<flagdef>`)](#flag-definitions-flagdefs-flagdef)
+  - [Command Line Parsing: Example](#command-line-parsing-example)
 - [Passing Options to Other Programs](#passing-options-to-other-programs)
 - [Passing Options to Run Methods](#passing-options-to-run-methods)
 - [To Do](#to-do)
@@ -27,14 +28,14 @@
 * External commands call a child process that is passed the remaing command line arguments, so those can be
   dealt with summarily.
 
-# Command Line Structure
+## Command Line Structure
 
 ```
-node cli.js --cd=some/other/place funge --verbose=true -gh 'foo'
-│  │ │    │ │                   │ │   │ └────────────┘ └─┘ └───┘
-│  │ │    │ │                   │ │   │   L             S   P
-└──┘ └────┘ └───────────────────┘ └───┘ └──────────────────────┘
-  E    S      M                    I/X    A
+node cli.js │ --cd=some/other/place funge --verbose=true -gh 'foo'
+│  │ │    │ │ │                   │ │   │ └────────────┘ └─┘ └───┘
+│  │ │    │ │ │                   │ │   │   L             S   P
+└──┘ └────┘ │ └───────────────────┘ └───┘ └──────────────────────┘
+  E    S    │   M                    I/X    A
 ```
 
 * E—executable
@@ -46,20 +47,55 @@ node cli.js --cd=some/other/place funge --verbose=true -gh 'foo'
 * S—short Boolean flags `g`, `h`
 * P—positional flag
 
-# Job Definitions (`jobdefs`)
+A valid command line must either call for printing a application-specific help (using one of `... -h`, `...
+--help`, or `... help`), or application version (using one of `... -v`, `... --version`, or `... version`),
+or else spell out a configured application-specific command (including additional arguments where required).
 
-* `jobdef`
-  * **`?exit_on_error <boolean> = true`**—When calling `MIXA.run jobdef, input`, determines whether to exit
-    with an exit code in case an error in the jobdef or the input was detected. `exit_on_error` does not
-    affect the behavior of `MIXA.parse jobdef, input`.
-  * **`?meta <mixa_flagdefs>`**—An object that specifies (additional) metaflags to go before the command.
-    See [Flag Definitions (`<flagdefs>`, `<flagdef>`)](#flag-definitions-flagdefs-flagdef)
-  * **`?commands <mixa_cmddefs>`**—See [Command Definitions (`<cmddefs>`,
-    `<cmddef>`)](#command-definitions-cmddefs-cmddef).
+## Metaflags
 
+Metaflags are command line arguments preceded by one (short form) or two (long form) dashes that are placed
+before the command line like so:
 
+```bash
+node cli.js --help                                  # show help and exit
+node cli.js -h                                      # dto.
+node cli.js --version                               # show version and exit
+node cli.js -v                                      # dto.
+node cli.js --cd some/other/place/somewhere foo 42  # change into directory given, then run `foo 42`
+node cli.js -d some/other/place/somewhere foo 42    # dto.
+```
 
-# Command Definitions (`<cmddefs>`, `<cmddef>`)
+The above are the preconfigured metaflags, but one can define additional ones in the [Job Definition
+(`<jobdef>`)](#job-definition-jobdef).
+
+## Job Definition (`<jobdef>`)
+
+A Job definition (an object of type `<jobdef>`) specifies declaratively what additional metaflags and
+commands are available for the application in question. A Job definition may contain the following fields
+(question mark indicates optional value, angle brackets specifiy types; the default is given behind the
+equals sign):
+
+* **`?exit_on_error <boolean> = true`**—When calling `MIXA.run jobdef, input`, determines whether to exit
+  with an exit code in case an error in the jobdef or the input was detected. `exit_on_error` does not
+  affect the behavior of `MIXA.parse jobdef, input`.
+* **`?meta <mixa_flagdefs>`**—An object that specifies (additional) metaflags to go before the command.
+  See [Flag Definitions (`<flagdefs>`, `<flagdef>`)](#flag-definitions-flagdefs-flagdef)
+* **`?commands <mixa_cmddefs>`**—See [Command Definitions (`<cmddefs>`,
+  `<cmddef>`)](#command-definitions-cmddefs-cmddef).
+
+Example:
+
+```coffee
+jobdef =
+  exit_on_error: true
+  commands:
+    foo: { ... definition for command `foo` ... }
+    bar: { ... definition for command `bar` ... }
+```
+
+This job definition delcares that there two commands `foo` and `bar` in the application.
+
+## Command Definitions (`<cmddefs>`, `<cmddef>`)
 
 The keys of a `cmddefs` object are interpreted as command names; its values are `<cmddef>` objects:
 
@@ -72,7 +108,7 @@ The keys of a `cmddefs` object are interpreted as command names; its values are 
 * **`?plus <any>`**—Any additional value or values that should be made accessible to the runner as
   `verdict.plus`.
 
-# Flag Definitions (`<flagdefs>`, `<flagdef>`)
+## Flag Definitions (`<flagdefs>`, `<flagdef>`)
 
 The keys of a `flagdefs` object are interpreted as long flag names; its values are `<flagdef>` objects:
 
@@ -85,7 +121,7 @@ The keys of a `flagdefs` object are interpreted as long flag names; its values a
   id allowed; interacts with `allow_extra`; only at most one flag can be marked `positional`
 
 
-# Command Line Parsing: Example
+## Command Line Parsing: Example
 
 * `parse jobdef, process.argv` will return object with
   * **`jobdef`**—The `jobdef` that describes how to parse command line arguments into a command with
