@@ -7,8 +7,9 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Command Line Structure](#command-line-structure)
-- [Configuring Jobs with `jobdefs`](#configuring-jobs-with-jobdefs)
-- [Configuring Commands with `cmddefs`](#configuring-commands-with-cmddefs)
+- [Job Definitions (`jobdefs`)](#job-definitions-jobdefs)
+- [Command Definitions (`<cmddefs>`, `<cmddef>`)](#command-definitions-cmddefs-cmddef)
+- [Flag Definitions (`<flagdefs>`, `<flagdef>`)](#flag-definitions-flagdefs-flagdef)
 - [Command Line Parsing: Example](#command-line-parsing-example)
 - [Passing Options to Other Programs](#passing-options-to-other-programs)
 - [Passing Options to Run Methods](#passing-options-to-run-methods)
@@ -45,41 +46,44 @@ node cli.js --cd=some/other/place funge --verbose=true -gh 'foo'
 * S—short Boolean flags `g`, `h`
 * P—positional flag
 
-# Configuring Jobs with `jobdefs`
+# Job Definitions (`jobdefs`)
 
 * `jobdef`
   * **`?exit_on_error <boolean> = true`**—When calling `MIXA.run jobdef, input`, determines whether to exit
     with an exit code in case an error in the jobdef or the input was detected. `exit_on_error` does not
     affect the behavior of `MIXA.parse jobdef, input`.
   * **`?meta <mixa_flagdefs>`**—An object that specifies (additional) metaflags to go before the command.
-  * **`?commands <mixa_cmddefs>`**—An object that specifies commands; its keys are interpreted as command
-    names; its values are `<mixa_cmddef>` objects:
-      * **`?description <text>`**—
-      * **`?allow_extra <boolean> = false`**—Whether to allow unspecified arguments on the command line;
-        these will be made available as `verdict.extra`.
-      * **`?flags <mixa_flagdefs>`**—An object detailing each command line argument to the command in
-        question.
-      * **`?runner <_mixa_runnable>`**—A synchronous or asynchronous function to be called by `MIXA.run
-        jobdef, input` provided no error occured during validation of `jobdef` and parsing the `input`
-      * **`?plus <any>`**—Any additional value or values that should be made accessible to the runner as
-        `verdict.plus`.
+    See [Flag Definitions (`<flagdefs>`, `<flagdef>`)](#flag-definitions-flagdefs-flagdef)
+  * **`?commands <mixa_cmddefs>`**—See [Command Definitions (`<cmddefs>`,
+    `<cmddef>`)](#command-definitions-cmddefs-cmddef).
 
-# Configuring Commands with `cmddefs`
 
-* `meta`
-* `commands`
-  * `allow_extra`
-  * `flags`
-    * `multiple`: `false`, `'greedy'`, `'lazy'`; defaults to `false`; if `'greedy'`, multiple values may be
-      set without repeating the flag name; if `'lazy'`, flag name must be repeated for each value. Ensuing
-      named values are honored in either case.
-    * `fallback` (translated to `defaultValue`): used when flag is missing; note that when flag is mentioned
-      without a value, then value `none` will be assigned
-    * `positional`: `true` or `false` (translated to `defaultOption`), indicates whether unnamed argument
-      id allowed; interacts with `allow_extra`; only at most one flag can be marked `positional`
-  * `runner`: `function` or `asyncfunction`, will receive result of `MIXA.parse()`
-  * `plus`: any value to be attached to the result object under key `plus`
-  <!-- * `raw`: when `true`,  -->
+
+# Command Definitions (`<cmddefs>`, `<cmddef>`)
+
+The keys of a `cmddefs` object are interpreted as command names; its values are `<cmddef>` objects:
+
+* **`?description <text>`**—
+* **`?allow_extra <boolean> = false`**—Whether to allow unspecified arguments on the command line; these
+  will be made available as `verdict.extra`.
+* **`?flags <mixa_flagdefs>`**—An object detailing each command line argument to the command in question.
+* **`?runner <_mixa_runnable>`**—A synchronous or asynchronous function to be called by `MIXA.run jobdef,
+  input` provided no error occured during validation of `jobdef` and parsing the `input`
+* **`?plus <any>`**—Any additional value or values that should be made accessible to the runner as
+  `verdict.plus`.
+
+# Flag Definitions (`<flagdefs>`, `<flagdef>`)
+
+The keys of a `flagdefs` object are interpreted as long flag names; its values are `<flagdef>` objects:
+
+* **`multiple <_mixa_mutliple>`**—`false`, `'greedy'`, `'lazy'`; defaults to `false`; if `'greedy'`,
+  multiple values may be set without repeating the flag name; if `'lazy'`, flag name must be repeated for
+  each value. Ensuing named values are honored in either case.
+* **`fallback <any>`**—Used when flag is missing; note that when flag is mentioned without a value, then
+  value `none` will be assigned
+* **`positional <boolean>`**—`true` or `false` (translated to `defaultOption`), indicates whether unnamed argument
+  id allowed; interacts with `allow_extra`; only at most one flag can be marked `positional`
+
 
 # Command Line Parsing: Example
 
