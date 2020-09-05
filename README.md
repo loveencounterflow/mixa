@@ -52,9 +52,8 @@ node cli.js --cd=some/other/place funge --verbose=true -gh 'foo'
     with an exit code in case an error in the jobdef or the input was detected. `exit_on_error` does not
     affect the behavior of `MIXA.parse jobdef, input`.
   * **`?meta <mixa_flagdefs>`**—An object that specifies (additional) metaflags to go before the command.
-  * **`?commands <mixa_cmddefs>`**—An object that specifies commands:
-
-    * The keys of the `commands` object are the command names; its values are `mixa_cnddef` objects:
+  * **`?commands <mixa_cmddefs>`**—An object that specifies commands; its keys are interpreted as command
+    names; its values are `<mixa_cmddef>` objects:
       * **`?description <text>`**—
       * **`?allow_extra <boolean> = false`**—Whether to allow unspecified arguments on the command line;
         these will be made available as `verdict.extra`.
