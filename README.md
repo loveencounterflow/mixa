@@ -8,8 +8,8 @@
 
 - [Command Line Structure](#command-line-structure)
 - [Configuring Jobs with `jobdefs`](#configuring-jobs-with-jobdefs)
+- [Configuring Commands with `cmddefs`](#configuring-commands-with-cmddefs)
 - [Command Line Parsing: Example](#command-line-parsing-example)
-- [Command Definitions](#command-definitions)
 - [Passing Options to Other Programs](#passing-options-to-other-programs)
 - [Passing Options to Run Methods](#passing-options-to-run-methods)
 - [To Do](#to-do)
@@ -64,6 +64,23 @@ node cli.js --cd=some/other/place funge --verbose=true -gh 'foo'
       * **`?plus <any>`**—Any additional value or values that should be made accessible to the runner as
         `verdict.plus`.
 
+# Configuring Commands with `cmddefs`
+
+* `meta`
+* `commands`
+  * `allow_extra`
+  * `flags`
+    * `multiple`: `false`, `'greedy'`, `'lazy'`; defaults to `false`; if `'greedy'`, multiple values may be
+      set without repeating the flag name; if `'lazy'`, flag name must be repeated for each value. Ensuing
+      named values are honored in either case.
+    * `fallback` (translated to `defaultValue`): used when flag is missing; note that when flag is mentioned
+      without a value, then value `none` will be assigned
+    * `positional`: `true` or `false` (translated to `defaultOption`), indicates whether unnamed argument
+      id allowed; interacts with `allow_extra`; only at most one flag can be marked `positional`
+  * `runner`: `function` or `asyncfunction`, will receive result of `MIXA.parse()`
+  * `plus`: any value to be attached to the result object under key `plus`
+  <!-- * `raw`: when `true`,  -->
+
 # Command Line Parsing: Example
 
 * `parse jobdef, process.argv` will return object with
@@ -90,23 +107,6 @@ node cli.js --cd=some/other/place funge --verbose=true -gh 'foo'
       have fields `tag`, `code`, `message` where present
 
 *upcoming*
-
-# Command Definitions
-
-* `meta`
-* `commands`
-  * `allow_extra`
-  * `flags`
-    * `multiple`: `false`, `'greedy'`, `'lazy'`; defaults to `false`; if `'greedy'`, multiple values may be
-      set without repeating the flag name; if `'lazy'`, flag name must be repeated for each value. Ensuing
-      named values are honored in either case.
-    * `fallback` (translated to `defaultValue`): used when flag is missing; note that when flag is mentioned
-      without a value, then value `none` will be assigned
-    * `positional`: `true` or `false` (translated to `defaultOption`), indicates whether unnamed argument
-      id allowed; interacts with `allow_extra`; only at most one flag can be marked `positional`
-  * `runner`: `function` or `asyncfunction`, will receive result of `MIXA.parse()`
-  * `plus`: any value to be attached to the result object under key `plus`
-  <!-- * `raw`: when `true`,  -->
 
 # Passing Options to Other Programs
 
