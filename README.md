@@ -93,13 +93,13 @@ jobdef =
     bar: { ... definition for command `bar` ... }
 ```
 
-This job definition delcares that there two commands `foo` and `bar` in the application.
+This job definition declares that there two commands `foo` and `bar` in the application.
 
 ## Command Definitions (`<cmddefs>`, `<cmddef>`)
 
 The keys of a `cmddefs` object are interpreted as command names; its values are `<cmddef>` objects:
 
-* **`?description <text>`**—
+* **`?description <text>`**—A helpful one-liner to explain what the command does.
 * **`?allow_extra <boolean> = false`**—Whether to allow unspecified arguments on the command line; these
   will be made available as `verdict.extra`.
 * **`?flags <mixa_flagdefs>`**—An object detailing each command line argument to the command in question.
@@ -107,6 +107,33 @@ The keys of a `cmddefs` object are interpreted as command names; its values are 
   input` provided no error occured during validation of `jobdef` and parsing the `input`
 * **`?plus <any>`**—Any additional value or values that should be made accessible to the runner as
   `verdict.plus`.
+
+Example (cont'd from above):
+
+```coffee
+# file: cli.coffee
+
+MIXA = require 'mixa'
+
+jobdef =
+  exit_on_error: true
+  commands:
+    foo:
+      description:    "Do something awesome"
+      allow_extra:    true                          # allow unconfigured extra arguments
+      runner:         run_foo                       # function to be called
+    listfiles:
+      runner:         MIXA.runners.execSync         # call convenience function for sync sub-process
+      plus:           { executable: 'ls', }         # `execSync` will use `plus.executable` as name of executable
+      allow_extra:    true                          # `true` b/c we want to pass arguments to `ls`
+
+console.log MIXA.run jobdef, process.argv
+
+```
+
+We can now call `node cli.js --cd=somewhere listfiles -- -AlF` from the command line to execute `ls -AlF`
+and get back whatever that outputs.
+
 
 ## Flag Definitions (`<flagdefs>`, `<flagdef>`)
 
