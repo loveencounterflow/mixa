@@ -1,6 +1,6 @@
 {
   "name": "mixa",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Fast and simple command line argument parsing with subcommands",
   "main": "lib/main.js",
   "scripts": {
