@@ -232,11 +232,12 @@ as_list_of_flags = ( flags ) ->
   if @types.is_sad ( R = @parse jobdef, argv ).verdict
     return @runners.help R
   return R unless ( runner = R.verdict.runner )?
-    ### TAINT ensure this is an object of type `result` (`{ ?ok: any, ?error: any }`) ###
-  R.output = runner R
-  debug '^33334^', R.output
+  ### TAINT ensure this is an object of type `result` (`{ ?ok: any, ?error: any }`) ###
+  opath     = process.cwd()
+  process.chdir R.verdict.cd if R.verdict.cd?
+  R.output  = runner R
+  process.chdir opath
   if @types.is_sad R.output
-    warn '^3443451^', "output is sad"
     return @runners.help R
   return R
   # return await R.runner R
