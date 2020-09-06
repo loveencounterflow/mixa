@@ -80,9 +80,7 @@ has_only_keys = ( x, keys ) ->
   "x.?runner is a _mixa_runnable":          ( x ) -> @isa_optional._mixa_runnable x.runner
   "x.?plus is anything":                    ( x ) -> true
   "x has only keys 'description', 'allow_extra', 'flags', 'runner', 'plus'":     \
-    ( x ) ->
-      debug '^33387^', ( k for k of x )
-      has_only_keys x, [ 'description', 'allow_extra', 'flags', 'runner', 'plus', ]
+    ( x ) -> has_only_keys x, [ 'description', 'allow_extra', 'flags', 'runner', 'plus', ]
 
 
 
