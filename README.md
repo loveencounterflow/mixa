@@ -200,3 +200,5 @@ The keys of a `flagdefs` object are interpreted as long flag names; its values a
 
 * [ ] consider whether to replace `positional` flag configuration with a single option in command
   configuration
+* [ ] implement mandatory flags
+
