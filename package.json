@@ -24,7 +24,7 @@
     "cnd": "^9.2.1",
     "command-line-args": "^6.0.0-preview.1",
     "intertype": "^7.4.0",
-    "letsfreezethat": "^2.2.5",
+    "letsfreezethat": "^3.0.3",
     "multimix": "^4.1.0"
   }
 }
