@@ -14,6 +14,7 @@
   - [Command Line Parsing: Example](#command-line-parsing-example)
 - [Passing Options to Other Programs](#passing-options-to-other-programs)
 - [Passing Options to Run Methods](#passing-options-to-run-methods)
+- [Also See](#also-see)
 - [To Do](#to-do)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -195,6 +196,10 @@ The keys of a `flagdefs` object are interpreted as long flag names; its values a
   object that describes the parsing result; this will be called the 'run method' or the 'runner'
 * set `plus` in the command definition to any value to be attached to the result object
 * the value of `plus` is specific to the run method chosen
+
+# Also See
+
+* [sadé, the Smooth (CLI) Operator](https://github.com/lukeed/sade)
 
 # To Do
 
