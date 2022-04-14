@@ -31,6 +31,7 @@ misfit                    = Symbol 'misfit'
   thaw
   lets }                  = require 'letsfreezethat'
 
+
 #===========================================================================================================
 #
 #-----------------------------------------------------------------------------------------------------------
@@ -58,6 +59,7 @@ defaults = freeze {
       flags:
         color:  { alias: 'c', type: Boolean, description: "whether to use color", }
     version:  { description: "show project version and exit", }
+  default_command: null
   }
 
 #-----------------------------------------------------------------------------------------------------------
@@ -126,6 +128,11 @@ as_list_of_flags = ( flags ) ->
       d.allow_extra  ?= false
       return null
     commands[ name ] = e
+  #.........................................................................................................
+  if jobdef.default_command?
+    unless jobdef.default_command of commands
+      return @_signal {}, 'help', 'ILLEGAL_SETTINGS', "default_command must be known, got #{rpr jobdef.default_command}"
+    R.default_command = jobdef.default_command
   #.........................................................................................................
   return R
 
@@ -201,7 +208,8 @@ as_list_of_flags = ( flags ) ->
     return @_signal R, 'help', 'OTHER', error.message
   cmd     = pluck p, 'cmd', null
   unless cmd?
-    return @_signal R, 'help', 'MISSING_CMD', "missing command"
+    return @_signal R, 'help', 'MISSING_CMD', "missing command" unless me.default_command?
+    cmd = me.default_command
   argv    = pluck p, '_unknown', []
   cmddef  = me.commands[ cmd ] ? null
   unless cmddef?
