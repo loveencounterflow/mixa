@@ -203,12 +203,14 @@ The keys of a `flagdefs` object are interpreted as long flag names; its values a
 
 # To Do
 
-* [ ] consider whether to replace `positional` flag configuration with a single option in command
+* **[–]** consider whether to replace `positional` flag configuration with a single option in command
   configuration
-* [ ] implement mandatory flags
-* [ ] consider moving from `command-line-args` to [`sade`](https://github.com/lukeed/sade)
-* [ ] consider to offer sub-contexts as done by https://github.com/substack/subarg
-
+* **[–]** implement mandatory flags
+* **[–]** consider moving from `command-line-args` to [`sade`](https://github.com/lukeed/sade)
+* **[–]** consider to offer sub-contexts as done by https://github.com/substack/subarg
+* **[+/–]** implement 'default_command'
+  * **[+]** must match existing named command
+  * **[–]** cannot have positional flags
 
 
 
