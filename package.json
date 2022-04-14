@@ -21,10 +21,15 @@
     "url": "https://github.com/loveencounterflow/mixa/issues"
   },
   "dependencies": {
+    "@iarna/toml": "^2.2.5",
     "cnd": "9.2.2",
     "command-line-args": "^6.0.0-preview.1",
+    "find-up": "5",
+    "flat": "^5.0.2",
     "intertype": "7.7.0",
     "letsfreezethat": "3.1.0",
-    "multimix": "5.0.0"
+    "multimix": "5.0.0",
+    "ospath": "^1.2.2",
+    "pkg-dir": "5"
   }
 }
