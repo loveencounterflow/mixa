@@ -21,9 +21,9 @@
     "url": "https://github.com/loveencounterflow/mixa/issues"
   },
   "dependencies": {
-    "cnd": "^9.2.1",
+    "cnd": "9.2.2",
     "command-line-args": "^6.0.0-preview.1",
-    "intertype": "7.6.5",
+    "intertype": "7.7.0",
     "letsfreezethat": "3.1.0",
     "multimix": "5.0.0"
   }

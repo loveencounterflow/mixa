@@ -1,34 +1,46 @@
-dependencies:
-  cnd: 9.2.1
-  command-line-args: 6.0.0-preview.1
-  intertype: 7.6.5
+lockfileVersion: 5.3
+
+specifiers:
+  cnd: 9.2.2
+  command-line-args: ^6.0.0-preview.1
+  intertype: 7.7.0
   letsfreezethat: 3.1.0
   multimix: 5.0.0
-lockfileVersion: 5.2
+
+dependencies:
+  cnd: 9.2.2
+  command-line-args: 6.0.0-preview.1
+  intertype: 7.7.0
+  letsfreezethat: 3.1.0
+  multimix: 5.0.0
+
 packages:
+
   /argv-tools/0.1.2:
+    resolution: {integrity: sha512-wxqoymY0BEu9NblZVQiOTOAiJUjPhaa/kbNMjC2h6bnrmUSgnxKgWJo3lzXvi3bHJRwXyqK/dHzMlZVRT89Cxg==}
+    engines: {node: '>=4.0.0'}
     dependencies:
       array-back: 2.0.0
       find-replace: 2.0.1
     dev: false
-    engines:
-      node: '>=4.0.0'
-    resolution:
-      integrity: sha512-wxqoymY0BEu9NblZVQiOTOAiJUjPhaa/kbNMjC2h6bnrmUSgnxKgWJo3lzXvi3bHJRwXyqK/dHzMlZVRT89Cxg==
+
   /array-back/2.0.0:
+    resolution: {integrity: sha512-eJv4pLLufP3g5kcZry0j6WXpIbzYw9GUB4mVJZno9wfwiBxbizTnHCw3VJb07cBihbFX48Y7oSrW9y+gt4glyw==}
+    engines: {node: '>=4'}
     dependencies:
       typical: 2.6.1
     dev: false
-    engines:
-      node: '>=4'
-    resolution:
-      integrity: sha512-eJv4pLLufP3g5kcZry0j6WXpIbzYw9GUB4mVJZno9wfwiBxbizTnHCw3VJb07cBihbFX48Y7oSrW9y+gt4glyw==
-  /cnd/9.2.1:
-    dev: false
+
+  /cnd/9.2.2:
+    resolution: {integrity: sha512-F+/H+7luk4fZkvN0+MT0I2nwn80YM/EtfMttNUFxENR50XJH4g0KgQevzeyEJ8B6t6l8Tb4Xti6QAksa8DmePA==}
     hasBin: true
-    resolution:
-      integrity: sha512-JszZtSlOCxkIvNPKpw1PmIcQUjYO+pBqVoKVH2STHLtG4JHHJ1NHowv39lhyxzlPxUTZk7pZ3qO7CfrfJ8ZSKw==
+    dependencies:
+      jsx-number-format: 0.1.5
+    dev: false
+
   /command-line-args/6.0.0-preview.1:
+    resolution: {integrity: sha512-VMoUjP9U1XTJPfXFwr7ImZN6QRFxEIJ3WWE+aSmtTpLoLdfwgI4m8bvDdx1FjkJfTSxrYLt5B/Yu1hHvTo+AnQ==}
+    engines: {node: '>=4.0.0'}
     dependencies:
       argv-tools: 0.1.2
       array-back: 2.0.0
@@ -36,53 +48,45 @@ packages:
       lodash.camelcase: 4.3.0
       typical: 2.6.1
     dev: false
-    engines:
-      node: '>=4.0.0'
-    resolution:
-      integrity: sha512-VMoUjP9U1XTJPfXFwr7ImZN6QRFxEIJ3WWE+aSmtTpLoLdfwgI4m8bvDdx1FjkJfTSxrYLt5B/Yu1hHvTo+AnQ==
+
   /find-replace/2.0.1:
+    resolution: {integrity: sha512-LzDo3Fpa30FLIBsh6DCDnMN1KW2g4QKkqKmejlImgWY67dDFPX/x9Kh/op/GK522DchQXEvDi/wD48HKW49XOQ==}
+    engines: {node: '>=4.0.0'}
     dependencies:
       array-back: 2.0.0
       test-value: 3.0.0
     dev: false
-    engines:
-      node: '>=4.0.0'
-    resolution:
-      integrity: sha512-LzDo3Fpa30FLIBsh6DCDnMN1KW2g4QKkqKmejlImgWY67dDFPX/x9Kh/op/GK522DchQXEvDi/wD48HKW49XOQ==
-  /intertype/7.6.5:
+
+  /intertype/7.7.0:
+    resolution: {integrity: sha512-Sv923oXpq9In8/CuxP5KAKc3FIETOEl23ltwSfLOnn/8V8A5pDRlxWo0vhaA6p7WybRMgeZXsE4Etw98tWUMPA==}
     dependencies:
       multimix: 5.0.0
     dev: false
-    resolution:
-      integrity: sha512-763YK3ezLYy9FkX+cTTg/qwGHteqlaTMiec9a2sVAKm7kXp9e7QkzbyYS6u4CcbLxx12L8bcRbe3SFsPeaJCMA==
+
+  /jsx-number-format/0.1.5:
+    resolution: {integrity: sha512-eS1SvW5Lm+UQOrpxqtTF6NgPDupYlCV1GXJr+f/1yp+nwQH/4qW6XarwCcdphQjNHrJFC4ko2MgRyRDS/ypqZw==}
+    dev: false
+
   /letsfreezethat/3.1.0:
+    resolution: {integrity: sha512-jJ1nvvQi6unW0WifjNPMIb64Byom0EXzSKWFYA++EpyjK3qv1J2pqeSoEJ61tGJoNG0GoNjPoeLYhxW16riZaA==}
     dev: false
-    resolution:
-      integrity: sha512-jJ1nvvQi6unW0WifjNPMIb64Byom0EXzSKWFYA++EpyjK3qv1J2pqeSoEJ61tGJoNG0GoNjPoeLYhxW16riZaA==
+
   /lodash.camelcase/4.3.0:
+    resolution: {integrity: sha1-soqmKIorn8ZRA1x3EfZathkDMaY=}
     dev: false
-    resolution:
-      integrity: sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
+
   /multimix/5.0.0:
+    resolution: {integrity: sha512-N9cdGSDDD7kxOV7R6e4iZqsHTZ4F4iiSDWqMcVqx4gEH6HBtRXav39Gj3fgT1YqvBcwPCQuf0Oa5R2cDaLWK8A==}
     dev: false
-    resolution:
-      integrity: sha512-N9cdGSDDD7kxOV7R6e4iZqsHTZ4F4iiSDWqMcVqx4gEH6HBtRXav39Gj3fgT1YqvBcwPCQuf0Oa5R2cDaLWK8A==
+
   /test-value/3.0.0:
+    resolution: {integrity: sha512-sVACdAWcZkSU9x7AOmJo5TqE+GyNJknHaHsMrR6ZnhjVlVN9Yx6FjHrsKZ3BjIpPCT68zYesPWkakrNupwfOTQ==}
+    engines: {node: '>=4.0.0'}
     dependencies:
       array-back: 2.0.0
       typical: 2.6.1
     dev: false
-    engines:
-      node: '>=4.0.0'
-    resolution:
-      integrity: sha512-sVACdAWcZkSU9x7AOmJo5TqE+GyNJknHaHsMrR6ZnhjVlVN9Yx6FjHrsKZ3BjIpPCT68zYesPWkakrNupwfOTQ==
+
   /typical/2.6.1:
+    resolution: {integrity: sha1-XAgOXWYcu+OCWdLnCjxyU+hziB0=}
     dev: false
-    resolution:
-      integrity: sha1-XAgOXWYcu+OCWdLnCjxyU+hziB0=
-specifiers:
-  cnd: ^9.2.1
-  command-line-args: ^6.0.0-preview.1
-  intertype: 7.6.5
-  letsfreezethat: 3.1.0
-  multimix: 5.0.0
