@@ -265,6 +265,8 @@ In the following list, later entries win over earlier ones; this is the same pri
 * **[–]** implement parsing of TOML configuration files
 * **[–]** make checks for pinned dependency versions part of public API
 * **[–]** in `pinned-package-version-checker.coffee`, handle missing dependency gracefully
+* **[–]** rename `MIXA.configurator` -> `MIXA.cfg`
+* **[–]** implement `defaults`, `overrides` for `MIXA.cfg`
 
 
 
