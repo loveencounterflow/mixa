@@ -211,6 +211,8 @@ The keys of a `flagdefs` object are interpreted as long flag names; its values a
 
 ## M.I.X.A. for TOML Configuration File Parsing
 
+**NOTE** This functionality is pre-alpha; details are likely to change in upcoming releases
+
 ### Configuration Sources
 
 In the following list, later entries win over earlier ones; this is the same principle that CSS and
@@ -262,6 +264,7 @@ In the following list, later entries win over earlier ones; this is the same pri
   * **[–]** cannot have positional flags
 * **[–]** implement parsing of TOML configuration files
 * **[–]** make checks for pinned dependency versions part of public API
+* **[–]** in `pinned-package-version-checker.coffee`, handle missing dependency gracefully
 
 
 
