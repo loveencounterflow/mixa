@@ -5,9 +5,9 @@ specifiers:
   cnd: 9.2.2
   command-line-args: ^6.0.0-preview.1
   find-up: '5'
-  flat: ^5.0.2
   intertype: 7.7.0
   letsfreezethat: 3.1.0
+  lodash.merge: ^4.6.2
   multimix: 5.0.0
   ospath: ^1.2.2
   pkg-dir: '5'
@@ -18,9 +18,9 @@ dependencies:
   cnd: 9.2.2
   command-line-args: 6.0.0-preview.1
   find-up: 5.0.0
-  flat: 5.0.2
   intertype: 7.7.0
   letsfreezethat: 3.1.0
+  lodash.merge: 4.6.2
   multimix: 5.0.0
   ospath: 1.2.2
   pkg-dir: 5.0.0
@@ -81,11 +81,6 @@ packages:
       path-exists: 4.0.0
     dev: false
 
-  /flat/5.0.2:
-    resolution: {integrity: sha512-b6suED+5/3rTpUBdG1gupIl8MPFCAMA0QXwmljLhvCUKcUvdE4gWky9zpuGCcXHOsz4J9wPGNWq6OKpmIzz3hQ==}
-    hasBin: true
-    dev: false
-
   /intertype/7.7.0:
     resolution: {integrity: sha512-Sv923oXpq9In8/CuxP5KAKc3FIETOEl23ltwSfLOnn/8V8A5pDRlxWo0vhaA6p7WybRMgeZXsE4Etw98tWUMPA==}
     dependencies:
@@ -109,6 +104,10 @@ packages:
 
   /lodash.camelcase/4.3.0:
     resolution: {integrity: sha1-soqmKIorn8ZRA1x3EfZathkDMaY=}
+    dev: false
+
+  /lodash.merge/4.6.2:
+    resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
     dev: false
 
   /lru-cache/6.0.0:
