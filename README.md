@@ -226,24 +226,22 @@ In the following list, later entries win over earlier ones; this is the same pri
 
 (forthcoming)
 
-![Every Change Breaks Someone's Workflow](https://imgs.xkcd.com/comics/workflow_2x.png)
-
-<a href='https://xkcd.com/1172/'><img width='200' alt="Every Change Breaks Someone's Workflow" src='https://imgs.xkcd.com/comics/workflow_2x.png'></a>
-
-![Spec-ulation Keynote - Rich Hickey](https://www.youtube.com/watch?v=oyLBGkS5ICk)
-
-![HN Discussion](https://news.ycombinator.com/item?id=19076444); another ![HN
-Discussion](https://news.ycombinator.com/item?id=13085952)
-
-* devs like to forget they chose a particular version because of a particular feature that got removed or
-  changed in a ltaer version of a given dependency
-* one example would be the now-popular move to ES Modules ('`import`') when your own package still used CJS
-  Modules ('`require`')
-* no way in `package.json` to indicate *reason* for a particular version choice: was it the latest available
-  at the time? would the software work with a newer version or is it known not to?
-* tools such as [`npm-check`](https://github.com/dylang/npm-check) always suggest to install the latest
-* can configure [SemVer](https://semver.org) matchers in file `pinned-package-versions.json` which is not
-  touched by tools
+* Motivation
+  * <a href='https://xkcd.com/1172/'><img width='300' alt="Every Change Breaks Someone's Workflow"
+    src='https://imgs.xkcd.com/comics/workflow_2x.png'></a>
+  * [Spec-ulation Keynote - Rich Hickey](https://www.youtube.com/watch?v=oyLBGkS5ICk)
+  * [HN Discussion](https://news.ycombinator.com/item?id=19076444); another ![HN
+    Discussion](https://news.ycombinator.com/item?id=13085952)
+  * devs like to forget they chose a particular version because of a particular feature that got removed or
+    changed in a later version of a given dependency
+  * one example would be the now-popular move to ES Modules ('`import`') when your own package still used CJS
+    Modules ('`require`')
+  * no way in `package.json` to indicate *reason* for a particular version choice: was it the latest available
+    at the time? would the software work with a newer version or is it known not to?
+  * tools such as [`npm-check`](https://github.com/dylang/npm-check) always suggest to install the latest
+* How it works
+  * can configure [SemVer](https://semver.org) matchers in file `pinned-package-versions.json` which is not
+    touched by tools
 
 ## Also See
 
