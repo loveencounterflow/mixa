@@ -30,6 +30,7 @@
     "letsfreezethat": "3.1.0",
     "multimix": "5.0.0",
     "ospath": "^1.2.2",
-    "pkg-dir": "5"
+    "pkg-dir": "5",
+    "semver": "^7.3.7"
   }
 }
