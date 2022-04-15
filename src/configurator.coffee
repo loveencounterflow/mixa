@@ -27,26 +27,26 @@ OSPATH                    = require 'ospath'
 TOML                      = require '@iarna/toml'
 FINDUP                    = require 'find-up'
 PKGDIR                    = require 'pkg-dir'
-urge '^4645609056^', PKGDIR.sync()
 
 #-----------------------------------------------------------------------------------------------------------
-@get_cfg_search_path = ( module_name ) ->
-  R         = new Set()
-  filename  = ".#{module_name}.toml"
-  path      = FINDUP.sync filename, { cwd: process.cwd(), };  R.add path if path?
-  path      = PATH.join PKGDIR.sync(), filename;              R.add path if FINDUP.sync.exists path
-  path      = PATH.join OSPATH.home(), filename;              R.add path if FINDUP.sync.exists path
+@get_cfg_search_path = ( start_path ) ->
+  module_home = PKGDIR.sync start_path
+  module_name = PATH.basename module_home
+  filename    = ".#{module_name}.toml"
+  R           = new Set()
+  path        = FINDUP.sync filename, { cwd: start_path, };     R.add path if path?
+  path        = PATH.join OSPATH.home(), filename;              R.add path if FINDUP.sync.exists path
   return [ R..., ]
 
 #-----------------------------------------------------------------------------------------------------------
-@read_cfg = ( module_name ) ->
-  debug '^46453656^', CND.get_caller_info 0
-  debug '^46453656^', CND.get_caller_info 1
-  debug '^46453656^', CND.get_caller_info 2
-  process.exit 111
-  validate.nonempty_text module_name
+@read_cfg = ( start_path = null ) ->
+  unless start_path?
+    unless ( start_path = ( CND.get_caller_info 2 )?.route ? null )?
+      throw new Error "^mixa/configurator@1^ unable to resolve module"
+  else
+    validate.nonempty_text start_path
   R = { $routes: [], }
-  for route, route_idx in @get_cfg_search_path module_name
+  for route, route_idx in @get_cfg_search_path start_path
     try
       partial_cfg = TOML.parse FS.readFileSync route
     catch error
