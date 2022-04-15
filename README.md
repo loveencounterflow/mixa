@@ -224,6 +224,13 @@ In the following list, later entries win over earlier ones; this is the same pri
 
 (forthcoming)
 
+![Every Change Breaks Someone's Workflow](https://imgs.xkcd.com/comics/workflow_2x.png)
+
+![Spec-ulation Keynote - Rich Hickey](https://www.youtube.com/watch?v=oyLBGkS5ICk)
+
+![HN Discussion](https://news.ycombinator.com/item?id=19076444); another ![HN
+Discussion](https://news.ycombinator.com/item?id=13085952)
+
 * devs like to forget they chose a particular version because of a particular feature that got removed or
   changed in a ltaer version of a given dependency
 * one example would be the now-popular move to ES Modules ('`import`') when your own package still used CJS
