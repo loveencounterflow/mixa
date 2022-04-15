@@ -234,14 +234,17 @@ In the following list, later entries win over earlier ones; this is the same pri
   * another [HN Discussion](https://news.ycombinator.com/item?id=13085952)
   * devs like to forget they chose a particular version because of a particular feature that got removed or
     changed in a later version of a given dependency
-  * one example would be the now-popular move to ES Modules ('`import`') when your own package still used CJS
-    Modules ('`require`')
-  * no way in `package.json` to indicate *reason* for a particular version choice: was it the latest available
-    at the time? would the software work with a newer version or is it known not to?
+  * one example would be the now-popular move to ES Modules ('`import`') when your own package still used
+    CJS Modules ('`require`')
+  * no way in `package.json` to indicate *reason* for a particular version choice: was it the latest
+    available at the time? would the software work with a newer version or is it known not to?
   * tools such as [`npm-check`](https://github.com/dylang/npm-check) always suggest to install the latest
+    version which may not always be the right version for the project at hand
 * How it works
   * can configure [SemVer](https://semver.org) matchers in file `pinned-package-versions.json` which is not
     touched by tools
+  * add `require( 'mixa/lib/pinned-package-versions.json' )` close to your package entry point (`index.js`,
+    `main.js`)
 
 ## Also See
 
