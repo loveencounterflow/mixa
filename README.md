@@ -6,16 +6,20 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-  - [Command Line Structure](#command-line-structure)
-  - [Metaflags](#metaflags)
-  - [Job Definition (`<jobdef>`)](#job-definition-jobdef)
-  - [Command Definitions (`<cmddefs>`, `<cmddef>`)](#command-definitions-cmddefs-cmddef)
-  - [Flag Definitions (`<flagdefs>`, `<flagdef>`)](#flag-definitions-flagdefs-flagdef)
-  - [Command Line Parsing: Example](#command-line-parsing-example)
+- [M.I.X.A.](#mixa)
+  - [M.I.X.A. for Command Line Argument Parsing](#mixa-for-command-line-argument-parsing)
+    - [Command Line Structure](#command-line-structure)
+    - [Metaflags](#metaflags)
+    - [Job Definition (`<jobdef>`)](#job-definition-jobdef)
+    - [Command Definitions (`<cmddefs>`, `<cmddef>`)](#command-definitions-cmddefs-cmddef)
+    - [Flag Definitions (`<flagdefs>`, `<flagdef>`)](#flag-definitions-flagdefs-flagdef)
+    - [Command Line Parsing: Example](#command-line-parsing-example)
 - [Passing Options to Other Programs](#passing-options-to-other-programs)
-- [Passing Options to Run Methods](#passing-options-to-run-methods)
-- [Also See](#also-see)
-- [To Do](#to-do)
+  - [Passing Options to Run Methods](#passing-options-to-run-methods)
+  - [M.I.X.A. for TOML Configuration File Parsing](#mixa-for-toml-configuration-file-parsing)
+    - [Configuration Sources](#configuration-sources)
+  - [Also See](#also-see)
+  - [To Do](#to-do)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -29,7 +33,11 @@
 * External commands call a child process that is passed the remaing command line arguments, so those can be
   dealt with summarily.
 
-## Command Line Structure
+# M.I.X.A.
+
+## M.I.X.A. for Command Line Argument Parsing
+
+### Command Line Structure
 
 ```
 node cli.js │ --cd=some/other/place funge --verbose=true -gh 'foo'
@@ -52,7 +60,7 @@ A valid command line must either call for printing a application-specific help (
 --help`, or `... help`), or application version (using one of `... -v`, `... --version`, or `... version`),
 or else spell out a configured application-specific command (including additional arguments where required).
 
-## Metaflags
+### Metaflags
 
 Metaflags are command line arguments preceded by one (short form) or two (long form) dashes that are placed
 before the command line like so:
@@ -69,7 +77,7 @@ node cli.js -d some/other/place/somewhere foo 42    # dto.
 The above are the preconfigured metaflags, but one can define additional ones in the [Job Definition
 (`<jobdef>`)](#job-definition-jobdef).
 
-## Job Definition (`<jobdef>`)
+### Job Definition (`<jobdef>`)
 
 A Job definition (an object of type `<jobdef>`) specifies declaratively what additional metaflags and
 commands are available for the application in question. A Job definition may contain the following fields
@@ -96,7 +104,7 @@ jobdef =
 
 This job definition declares that there two commands `foo` and `bar` in the application.
 
-## Command Definitions (`<cmddefs>`, `<cmddef>`)
+### Command Definitions (`<cmddefs>`, `<cmddef>`)
 
 The keys of a `cmddefs` object are interpreted as command names; its values are `<cmddef>` objects:
 
@@ -136,7 +144,7 @@ We can now call `node cli.js --cd=somewhere listfiles -- -AlF` from the command 
 and get back whatever that outputs.
 
 
-## Flag Definitions (`<flagdefs>`, `<flagdef>`)
+### Flag Definitions (`<flagdefs>`, `<flagdef>`)
 
 The keys of a `flagdefs` object are interpreted as long flag names; its values are `<flagdef>` objects:
 
@@ -149,7 +157,7 @@ The keys of a `flagdefs` object are interpreted as long flag names; its values a
   id allowed; interacts with `allow_extra`; only at most one flag can be marked `positional`
 
 
-## Command Line Parsing: Example
+### Command Line Parsing: Example
 
 * `parse jobdef, process.argv` will return object with
   * **`jobdef`**—The `jobdef` that describes how to parse command line arguments into a command with
@@ -190,18 +198,34 @@ The keys of a `flagdefs` object are interpreted as long flag names; its values a
 * Observe that `allow_extra` should be set to `true` to allow extra arguments; otherwise, an `EXTRA_FLAGS`
   error will be generated.
 
-# Passing Options to Run Methods
+## Passing Options to Run Methods
 
 * set `runner` in the command definition to a synchronous or asynchronous function that will be called with the
   object that describes the parsing result; this will be called the 'run method' or the 'runner'
 * set `plus` in the command definition to any value to be attached to the result object
 * the value of `plus` is specific to the run method chosen
 
-# Also See
+
+## M.I.X.A. for TOML Configuration File Parsing
+
+### Configuration Sources
+
+In the following list, later entries win over earlier ones; this is the same principle that CSS and
+`Object.assign()` use.
+
+* a *file* named `.$app_name.toml` in the user's home directory;
+* a *file* named `.$app_name.toml` in the directory of the parent project (i.e. the containing directory of
+  the `package.json` file for the package that has `mixa` as direct dependency);
+* other *file(s)* identified by one or more paths passed to `read_cfg()` (from the command line);
+* other *settings* passed to `read_cfg()` (from the command line).
+
+
+
+## Also See
 
 * [sadé, the Smooth (CLI) Operator](https://github.com/lukeed/sade)
 
-# To Do
+## To Do
 
 * **[–]** consider whether to replace `positional` flag configuration with a single option in command
   configuration
@@ -211,6 +235,7 @@ The keys of a `flagdefs` object are interpreted as long flag names; its values a
 * **[+/–]** implement 'default_command'
   * **[+]** must match existing named command
   * **[–]** cannot have positional flags
+* **[–]** implement parsing of TOML configuration files
 
 
 
