@@ -18,6 +18,7 @@
   - [Passing Options to Run Methods](#passing-options-to-run-methods)
   - [M.I.X.A. for TOML Configuration File Parsing](#mixa-for-toml-configuration-file-parsing)
     - [Configuration Sources](#configuration-sources)
+  - [M.I.X.A. for Checking Pinned Versions of Dependencies](#mixa-for-checking-pinned-versions-of-dependencies)
   - [Also See](#also-see)
   - [To Do](#to-do)
 
@@ -219,7 +220,19 @@ In the following list, later entries win over earlier ones; this is the same pri
 * other *file(s)* identified by one or more paths passed to `read_cfg()` (from the command line);
 * other *settings* passed to `read_cfg()` (from the command line).
 
+## M.I.X.A. for Checking Pinned Versions of Dependencies
 
+(forthcoming)
+
+* devs like to forget they chose a particular version because of a particular feature that got removed or
+  changed in a ltaer version of a given dependency
+* one example would be the now-popular move to ES Modules ('`import`') when your own package still used CJS
+  Modules ('`require`')
+* no way in `package.json` to indicate *reason* for a particular version choice: was it the latest available
+  at the time? would the software work with a newer version or is it known not to?
+* tools such as [`npm-check`](https://github.com/dylang/npm-check) always suggest to install the latest
+* can configure [SemVer](https://semver.org) matchers in file `pinned-package-versions.json` which is not
+  touched by tools
 
 ## Also See
 
@@ -236,6 +249,7 @@ In the following list, later entries win over earlier ones; this is the same pri
   * **[+]** must match existing named command
   * **[–]** cannot have positional flags
 * **[–]** implement parsing of TOML configuration files
+* **[–]** make checks for pinned dependency versions part of public API
 
 
 
