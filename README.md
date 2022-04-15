@@ -228,7 +228,7 @@ In the following list, later entries win over earlier ones; this is the same pri
 
 ![Every Change Breaks Someone's Workflow](https://imgs.xkcd.com/comics/workflow_2x.png)
 
-<img width='500' alt="Every Change Breaks Someone's Workflow" src='https://imgs.xkcd.com/comics/workflow_2x.png'>
+<a href='https://xkcd.com/1172/'><img width='200' alt="Every Change Breaks Someone's Workflow" src='https://imgs.xkcd.com/comics/workflow_2x.png'></a>
 
 ![Spec-ulation Keynote - Rich Hickey](https://www.youtube.com/watch?v=oyLBGkS5ICk)
 
