@@ -16,8 +16,8 @@
     - [Command Definitions (`<cmddefs>`, `<cmddef>`)](#command-definitions-cmddefs-cmddef)
     - [Flag Definitions (`<flagdefs>`, `<flagdef>`)](#flag-definitions-flagdefs-flagdef)
     - [Command Line Parsing: Example](#command-line-parsing-example)
-- [Passing Options to Other Programs](#passing-options-to-other-programs)
-  - [Passing Options to Run Methods](#passing-options-to-run-methods)
+    - [Passing Options to Other Programs](#passing-options-to-other-programs)
+    - [Passing Options to Run Methods](#passing-options-to-run-methods)
   - [M.I.X.A. for TOML Configuration File Parsing](#mixa-for-toml-configuration-file-parsing)
     - [Configuration Sources](#configuration-sources)
   - [M.I.X.A. for Checking Pinned Versions of Dependencies](#mixa-for-checking-pinned-versions-of-dependencies)
@@ -187,7 +187,7 @@ The keys of a `flagdefs` object are interpreted as long flag names; its values a
 
 *upcoming*
 
-# Passing Options to Other Programs
+### Passing Options to Other Programs
 
 * Sometimes one wants to pass options to another executable; e.g. say we want to use `node x.js search
   -iname 'whatever'` to call the Linux `find` command in a subprocess and we wish to not analyze any options
@@ -201,7 +201,7 @@ The keys of a `flagdefs` object are interpreted as long flag names; its values a
 * Observe that `allow_extra` should be set to `true` to allow extra arguments; otherwise, an `EXTRA_FLAGS`
   error will be generated.
 
-## Passing Options to Run Methods
+### Passing Options to Run Methods
 
 * set `runner` in the command definition to a synchronous or asynchronous function that will be called with the
   object that describes the parsing result; this will be called the 'run method' or the 'runner'
