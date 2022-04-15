@@ -22,40 +22,55 @@ types                     = require './types'
 #...........................................................................................................
 PATH                      = require 'path'
 FS                        = require 'fs'
-flatten                   = require 'flat'
 OSPATH                    = require 'ospath'
 TOML                      = require '@iarna/toml'
 FINDUP                    = require 'find-up'
 PKGDIR                    = require 'pkg-dir'
+merge                     = require 'lodash.merge'
+
 
 #-----------------------------------------------------------------------------------------------------------
-@get_cfg_search_path = ( start_path ) ->
-  module_home = PKGDIR.sync start_path
-  module_name = PATH.basename module_home
-  filename    = ".#{module_name}.toml"
+types.declare 'mixacfg_cfg', tests:
+  "@isa.object x":                      ( x ) -> @isa.object x
+  "@isa.nonempty_text x.module_home":   ( x ) -> @isa.nonempty_text x.module_home
+  "@isa.nonempty_text x.module_name":   ( x ) -> @isa.nonempty_text x.module_name
+  "@isa.nonempty_text x.start_path":    ( x ) -> @isa.nonempty_text x.start_path
+
+
+#-----------------------------------------------------------------------------------------------------------
+@_get_cfg_search_paths = ( cfg ) ->
   R           = new Set()
-  path        = FINDUP.sync filename, { cwd: start_path, };     R.add path if path?
-  path        = PATH.join OSPATH.home(), filename;              R.add path if FINDUP.sync.exists path
+  path        = FINDUP.sync cfg.cfg_name, { cwd: cfg.start_path, }; R.add path if path?
+  path        = PATH.join OSPATH.home(), cfg.cfg_name;              R.add path if FINDUP.sync.exists path
   return [ R..., ]
 
 #-----------------------------------------------------------------------------------------------------------
-@read_cfg = ( start_path = null ) ->
-  unless start_path?
-    unless ( start_path = ( CND.get_caller_info 2 )?.route ? null )?
+@read_cfg = ( cfg ) ->
+  cfg = { {}..., cfg..., }
+  unless cfg.start_path?
+    unless ( cfg.start_path = ( CND.get_caller_info 2 )?.route ? null )?
       throw new Error "^mixa/configurator@1^ unable to resolve module"
-  else
-    validate.nonempty_text start_path
-  R = { $routes: [], }
-  for route, route_idx in @get_cfg_search_path start_path
+  cfg.module_home  ?= PKGDIR.sync   cfg.start_path
+  cfg.module_name  ?= PATH.basename cfg.module_home
+  cfg.cfg_name     ?= ".#{cfg.module_name}.toml"
+  validate.mixacfg_cfg cfg
+  #.........................................................................................................
+  # debug '^443538^', ( require 'util' ).inspect cfg
+  R                 = { $: cfg, }
+  search_paths      = @_get_cfg_search_paths cfg
+  cfg.search_path   = search_paths.join ':' ### TAINT not valid on Windows ###
+  cfg.found_paths   = []
+  #.........................................................................................................
+  for route, route_idx in search_paths
     try
       partial_cfg = TOML.parse FS.readFileSync route
     catch error
       throw error unless error.code is 'ENOENT'
       warn "^cfg@1^ no such file: #{rpr path}, skipping"
       continue
-    R.$routes.push route
-    partial_cfg   = flatten partial_cfg, { delimiter: '.', safe: true, }
-    R             = { R..., partial_cfg..., }
+    cfg.found_paths.push route
+    # partial_cfg   = flatten partial_cfg, { delimiter: '.', safe: true, }
+    R = merge R, partial_cfg
   return R
 
 
