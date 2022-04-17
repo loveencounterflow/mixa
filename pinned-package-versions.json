@@ -1,8 +1,7 @@
 {
-  "pinned_versions": {
+  "dependencies": {
     "command-line-args":  "^6.0.0-preview.1",
     "find-up":            "5",
-    "flat":               "^5.0.2",
     "pkg-dir":            "5"
   }
 }
