@@ -17,13 +17,15 @@ info                      = CND.get_logger 'info',      badge
 echo                      = CND.echo.bind CND
 #...........................................................................................................
 SEMVER                    = require 'semver'
-packages_and_versions     = require '../pinned-package-versions.json'
 
 #===========================================================================================================
-do =>
+module.exports = ( packages_and_versions ) ->
   offenders   = []
-  for package_name, matcher of packages_and_versions.pinned_versions
-    { version, }  = require "#{package_name}/package.json"
+  for package_name, matcher of packages_and_versions.dependencies
+    try { version, } = require "#{package_name}/package.json" catch error
+      throw error unless error.code is 'MODULE_NOT_FOUND'
+      offenders.push "#{package_name}@#{version} (not installed)"
+      continue
     unless SEMVER.satisfies version, matcher
       offenders.push "#{package_name}@#{version} (≁ #{matcher})"
       warn '^mixa/version-checker@1^', CND.reverse \
@@ -31,6 +33,6 @@ do =>
   return null if offenders.length is 0
   throw new Error "^mixa/version-checker@2^ the following packages do not have a matching version: " + \
     offenders.join ', '
-
+  return null
 
 

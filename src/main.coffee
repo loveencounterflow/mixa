@@ -32,6 +32,8 @@ misfit                    = Symbol 'misfit'
   lets }                  = require 'letsfreezethat'
 #...........................................................................................................
 @configurator             = require './configurator'
+@check_package_versions   = require './check-package-versions'
+@check_package_versions require '../pinned-package-versions.json'
 
 
 #===========================================================================================================
