@@ -23,8 +23,7 @@ module.exports = ( packages_and_versions ) ->
   offenders   = []
   for package_name, matcher of packages_and_versions.dependencies
     try { version, } = require "#{package_name}/package.json" catch error
-      throw error unless error.code is 'MODULE_NOT_FOUND'
-      offenders.push "#{package_name}@#{version} (not installed)"
+      offenders.push "#{package_name}@#{version} (#{error.code ? 'ERROR'}:#{error.message})"
       continue
     unless SEMVER.satisfies version, matcher
       offenders.push "#{package_name}@#{version} (≁ #{matcher})"
