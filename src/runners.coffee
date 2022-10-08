@@ -25,9 +25,15 @@ types                     = require './types'
 #
 #-----------------------------------------------------------------------------------------------------------
 @help = ( parse ) ->
-  info '^233387^', "======== display help text here =========="
-  urge '^233387^', exit_on_error = parse.jobdef.exit_on_error ? true
-  whisper '^233387^', parse
+  if types.isa.function show_help = parse.jobdef?.commands?.help?.runner
+    echo()
+    echo()
+    show_help()
+    echo()
+  else
+    info '^233387^', "no help command configured"
+  exit_on_error = parse.jobdef.exit_on_error ? true
+  # whisper '^233387^', parse
   if ( error = parse.verdict.error      ) ? null then stage = 'input'
   else if ( error = parse.output.error  ) ? null then stage = 'output'
   if error?
@@ -35,8 +41,8 @@ types                     = require './types'
     code    = error.code ? 18
     tag     = error.tag  ? 'UNKNOWN'
     message = error.message ? "an unspecified error occurred"
-    message = "^mixa/runners/help@4457^ tag: #{tag}, code: #{code}, stage: #{rpr stage} | #{message}"
-    warn message
+    warn '^mixa/runners/help@4457^', "tag: #{tag}, code: #{code}, stage: #{rpr stage}"
+    warn '^mixa/runners/help@4457^', CND.reverse " #{message} "
     process.exit code if exit_on_error
   return parse
 
