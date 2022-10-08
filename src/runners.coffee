@@ -27,7 +27,6 @@ types                     = require './types'
 @help = ( parse ) ->
   if types.isa.function show_help = parse.jobdef?.commands?.help?.runner
     echo()
-    echo()
     show_help()
     echo()
   else
