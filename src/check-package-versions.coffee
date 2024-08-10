@@ -17,7 +17,6 @@ info                      = CND.get_logger 'info',      badge
 echo                      = CND.echo.bind CND
 #...........................................................................................................
 SEMVER                    = require 'semver'
-debug 'Ω___1', require 'read-package-up'
 READPKGUP                 = require 'read-package-up'
 
 #===========================================================================================================
