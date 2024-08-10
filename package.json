@@ -29,7 +29,8 @@
     "letsfreezethat": "3.1.0",
     "lodash.merge": "^4.6.2",
     "ospath": "^1.2.2",
-    "pkg-dir": "5",
+    "pkg-dir": "^8.0.0",
+    "read-package-up": "^11.0.0",
     "semver": "^7.3.7"
   }
 }

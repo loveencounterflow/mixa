@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "command-line-args":  "^6.0.0-preview.1",
+    "command-line-args":  "^6.0.0",
     "find-up":            "5",
-    "pkg-dir":            "5"
+    "pkg-dir":            "8"
   }
 }
 
