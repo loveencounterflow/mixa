@@ -28,7 +28,6 @@ FINDUP                    = require 'find-up'
 PKGDIR                    = require 'pkg-dir'
 merge                     = require 'lodash.merge'
 
-
 #-----------------------------------------------------------------------------------------------------------
 types.declare 'mixacfg_cfg', tests:
   "@isa.object x":                      ( x ) -> @isa.object x
@@ -50,7 +49,7 @@ types.declare 'mixacfg_cfg', tests:
   unless cfg.start_path?
     unless ( cfg.start_path = ( CND.get_caller_info 2 )?.route ? null )?
       throw new Error "^mixa/configurator@1^ unable to resolve module"
-  cfg.module_home  ?= PKGDIR.sync   cfg.start_path
+  cfg.module_home  ?= PKGDIR.packageDirectorySync cfg.start_path
   cfg.module_name  ?= PATH.basename cfg.module_home
   cfg.cfg_name     ?= ".#{cfg.module_name}.toml"
   validate.mixacfg_cfg cfg
