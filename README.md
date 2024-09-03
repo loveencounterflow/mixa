@@ -267,6 +267,12 @@ In the following list, later entries win over earlier ones; this is the same pri
 * **[+]** in `check-package-versions.coffee`, handle missing dependency gracefully
 * **[–]** rename `MIXA.configurator` -> `MIXA.cfg`
 * **[–]** implement `defaults`, `overrides` for `MIXA.cfg`
+* **[–]** update all dependencies
+* **[–]** update all dependency `intertype`, then integrate MIXA flag type declaration with `intertype`
+* **[–]** allow parameters use both hypen-minus `-` and underscores `_` transparently
+* **[–]** unify { `cmd`, `command`, `cmds`, `commands`, } -> { `cmd`, `cmds`, }
+* **[–]** do not use runners, restrict functionality to extract (and normalize) command and parameters (i.e.
+  'flags')
 
 
 
