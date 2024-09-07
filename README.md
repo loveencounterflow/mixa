@@ -23,6 +23,7 @@
   - [M.I.X.A. for Checking Pinned Versions of Dependencies](#mixa-for-checking-pinned-versions-of-dependencies)
   - [Also See](#also-see)
   - [To Do](#to-do)
+  - [Is Done](#is-done)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -273,6 +274,24 @@ In the following list, later entries win over earlier ones; this is the same pri
 * **[–]** unify { `cmd`, `command`, `cmds`, `commands`, } -> { `cmd`, `cmds`, }
 * **[–]** do not use runners, restrict functionality to extract (and normalize) command and parameters (i.e.
   'flags')
+* **[–]** rename parameters -> flags
+
+* **[–]** accept an optional `types` (an `Intertype` instance); naming convention is to prefix flag names
+  with `cli_` (or `flag_`?); can then set the `type` declaration in `flags` section to any of these:
+  * **[–]** nothing (or `null`): to be filled out using the conventional prefix, the flag name, and the
+    `types` argument
+  * **[–]** any value that is legal for an InterType type declaration, including:
+    * **[–]** the name of a type that exists in `types`
+    * **[–]** a test function
+    * **[–]** a valid InterType type declaration object
+  * **[–]** in any event, enforce at declaration time that `types.create[ type ].create()` can be
+    *meaningfully* called; this *may* entail an update to `intertype` to avoid non-sensical auto-generated
+    `create` methods
+
+## Is Done
+
+* **[+]** in case of error, <del>should still deliver all flags with values in `verdict.parameters`</del>
+  <ins>an attribute `verdict.extra_flags` will contain a list of extraneous flags</ins>
 
 
 
