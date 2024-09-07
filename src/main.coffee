@@ -231,6 +231,7 @@ as_list_of_flags = ( flags ) ->
   # ( R.argv[ idx ] = d.replace /^%-/, '-' ) for d, idx in R.argv
   #.........................................................................................................
   if ( not cmddef.allow_extra ) and R.argv.length > 0
+    R.extra_flags = ( parse_argv cmddef.flags, { argv, partial: true, } )._unknown
     return @_signal R, 'help', 'EXTRA_FLAGS', "command #{rpr cmd} does not allow extra parameters, got #{rpr R.argv}"
   R.plus    = plus    if ( plus   = cmddef.plus               )?
   R.runner  = runner  if ( runner = cmddef.runner ? me.runner )?
