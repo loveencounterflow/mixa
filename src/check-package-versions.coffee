@@ -19,6 +19,8 @@ echo                      = CND.echo.bind CND
 SEMVER                    = require 'semver'
 READPKGUP                 = require 'read-package-up'
 
+throw new Error "not currently used"
+
 #===========================================================================================================
 module.exports = ( packages_and_versions ) ->
   offenders   = []

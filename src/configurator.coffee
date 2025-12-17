@@ -24,8 +24,9 @@ PATH                      = require 'path'
 FS                        = require 'fs'
 OSPATH                    = require 'ospath'
 TOML                      = require '@iarna/toml'
+{ pathExistsSync,       } = require 'path-exists'
 FINDUP                    = require 'find-up'
-PKGDIR                    = require 'pkg-dir'
+PKGDIR                    = require 'package-directory'
 merge                     = require 'lodash.merge'
 
 #-----------------------------------------------------------------------------------------------------------
@@ -39,8 +40,8 @@ types.declare 'mixacfg_cfg', tests:
 #-----------------------------------------------------------------------------------------------------------
 @_get_cfg_search_paths = ( cfg ) ->
   R           = new Set()
-  path        = FINDUP.sync cfg.cfg_name, { cwd: cfg.start_path, }; R.add path if path?
-  path        = PATH.join OSPATH.home(), cfg.cfg_name;              R.add path if FINDUP.sync.exists path
+  path        = FINDUP.findUpSync cfg.cfg_name, { cwd: cfg.start_path, }; R.add path if path?
+  path        = PATH.join OSPATH.home(), cfg.cfg_name;              R.add path if pathExistsSync path
   return [ R..., ]
 
 #-----------------------------------------------------------------------------------------------------------
